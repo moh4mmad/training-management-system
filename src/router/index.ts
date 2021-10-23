@@ -15,6 +15,19 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  //settings
+  {
+    path: "/settings",
+    component: () => import("@/layout/Settings.vue"),
+    children: [
+      {
+        path: "blood-groups",
+        name: "blood groups",
+        component: () =>
+          import("@/views/configurations/settings/BloodGroups.vue"),
+      },
+    ],
+  },
   {
     path: "/components",
     component: () => import("@/layout/Components.vue"),
