@@ -71,7 +71,7 @@
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Qualification</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
@@ -82,8 +82,8 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
-                  <el-input v-model="formData.bg" />
+                <el-form-item prop="email">
+                  <el-input v-model="formData.qualification" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -155,14 +155,14 @@ export default defineComponent({
       code: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Code is required",
           trigger: "change",
         },
       ],
       bg: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Qualification  is required",
           trigger: "change",
         },
       ],

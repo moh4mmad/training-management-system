@@ -14,7 +14,7 @@
             v-model="search"
             @input="searchItems()"
             class="form-control form-control-solid w-250px ps-15"
-            placeholder="Search Educational Qualification"
+            placeholder="Search Qualification"
           />
         </div>
         <!--end::Search-->
@@ -49,7 +49,7 @@
             data-bs-target="#kt_modal_add_customer"
           >
             <i class="fas fa-plus"></i>
-            Add Educational Qualification
+            Add Qualification
           </button>
           <!--end::Add customer-->
         </div>
@@ -107,7 +107,7 @@
           {{ customer.code }}
         </template>
         <template v-slot:cell-bg="{ row: customer }">
-          {{ customer.bg }}
+          {{ customer.qualification }}
         </template>
         <template v-slot:cell-actions="{ row: customer }">
           <a
@@ -141,15 +141,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportEduQualificationModal></ExportEduQualificationModal>
+  <EduQualificationModal></EduQualificationModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportEduQualificationModal from "@/components/modals/forms/ExportEduQualificationModal.vue";
+import EduQualificationModal from "@/components/modals/forms/EduQualificationModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -160,8 +160,8 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportEduQualificationModal,
+    EduQualificationModal,
   },
   setup() {
     const checkedCustomers = ref([]);
@@ -172,8 +172,8 @@ export default defineComponent({
         sortable: true,
       },
       {
-        name: "Educational Qualification",
-        key: "bg",
+        name: "Qualification",
+        key: "qualification",
         sortable: true,
       },
       {

@@ -152,7 +152,8 @@ import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
 import { ICustomer } from "@/core/data/customers";
-import ApiService from "@/core/services/ApiService";
+// import ApiService from "@/core/services/ApiService";
+import ApiService from "@/core/services/NewApiService";
 
 export default defineComponent({
   name: "customers-listing",
@@ -188,18 +189,18 @@ export default defineComponent({
       MenuComponent.reinitialization();
       setCurrentPageBreadcrumbs("Customers Listing", ["Apps", "Customers"]);
       initCustomers.value.splice(0, tableData.value.length, ...tableData.value);
-      getData();
+      //getData();
     });
 
-    const getData = () => {
-      ApiService.get("configurations/blood_groups")
-        .then(({ data }) => {
-          console.log(data);
-        })
-        .catch(({ response }) => {
-          console.log(response);
-        });
-    };
+    // const getData = () => {
+    //   ApiService.get("configurations/blood_groups")
+    //     .then(({ data }) => {
+    //       console.log(data);
+    //     })
+    //     .catch(({ response }) => {
+    //       console.log(response);
+    //     });
+    // };
 
     const deleteFewCustomers = () => {
       checkedCustomers.value.forEach((item) => {
@@ -256,7 +257,7 @@ export default defineComponent({
   },
   methods: {
     getData() {
-      ApiService.get("configurations/blood_groups")
+      ApiService.get("http://localhost:8000/api/configurations/blood_groups")
         .then(({ data }) => {
           console.log(data);
         })

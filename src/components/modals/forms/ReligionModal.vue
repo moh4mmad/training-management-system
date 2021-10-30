@@ -13,7 +13,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_customer_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Blood Group</h2>
+          <h2 class="fw-bolder">Add Religion</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -71,7 +71,7 @@
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Religion</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
@@ -82,8 +82,8 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
-                  <el-input v-model="formData.bg" />
+                <el-form-item prop="email">
+                  <el-input v-model="formData.religion" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -155,14 +155,14 @@ export default defineComponent({
       code: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Code is required",
           trigger: "change",
         },
       ],
-      bg: [
+      religion: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Religion  is required",
           trigger: "change",
         },
       ],

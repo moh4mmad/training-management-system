@@ -13,7 +13,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_customer_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Blood Group</h2>
+          <h2 class="fw-bolder">Add Holiday</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -71,7 +71,7 @@
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Year</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
@@ -82,12 +82,69 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
-                  <el-input v-model="formData.bg" />
+                <el-form-item prop="email">
+                  <el-input v-model="formData.year" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Type</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Email address must be active"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="email">
+                  <el-input v-model="formData.holiday_type" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Name</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Email address must be active"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="email">
+                  <el-input v-model="formData.holiday_name" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Date</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Email address must be active"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="date">
+                  <el-input v-model="formData.date" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
             </div>
             <!--end::Scroll-->
           </div>
@@ -155,14 +212,21 @@ export default defineComponent({
       code: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Code is required",
           trigger: "change",
         },
       ],
-      bg: [
+      year: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Year is required",
+          trigger: "change",
+        },
+      ],
+      holiday_type: [
+        {
+          required: true,
+          message: "Type is required",
           trigger: "change",
         },
       ],

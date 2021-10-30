@@ -52,13 +52,13 @@
               <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Code</label>
+                <label class="required fs-6 fw-bold mb-2">Sector Code</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
                 <el-form-item prop="code">
                   <el-input
-                    v-model="formData.code"
+                    v-model="formData.sector_code"
                     type="text"
                     placeholder=""
                   />
@@ -71,7 +71,7 @@
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Sector Name</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
@@ -82,8 +82,29 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
-                  <el-input v-model="formData.bg" />
+                <el-form-item prop="email">
+                  <el-input v-model="formData.sector_name" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+              <!--begin::Input group-->
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Sector Description</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Email address must be active"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="email">
+                  <el-input v-model="formData.sector_desciption" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -152,17 +173,17 @@ export default defineComponent({
     });
 
     const rules = ref({
-      code: [
+      sector_code: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Code is required",
           trigger: "change",
         },
       ],
-      bg: [
+      sector_name: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Name  is required",
           trigger: "change",
         },
       ],

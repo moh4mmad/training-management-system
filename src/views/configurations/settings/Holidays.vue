@@ -104,8 +104,17 @@
         <template v-slot:cell-code="{ row: customer }">
           {{ customer.code }}
         </template>
-        <template v-slot:cell-bg="{ row: customer }">
-          {{ customer.bg }}
+        <template v-slot:cell-year="{ row: customer }">
+          {{ customer.year }}
+        </template>
+        <template v-slot:cell-holiday_type="{ row: customer }">
+          {{ customer.holiday_type }}
+        </template>
+        <template v-slot:cell-holiday_name="{ row: customer }">
+          {{ customer.holiday_name }}
+        </template>
+        <template v-slot:cell-date="{ row: customer }">
+          {{ customer.date }}
         </template>
         <template v-slot:cell-actions="{ row: customer }">
           <a
@@ -139,15 +148,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportHolidayModal></ExportHolidayModal>
+  <HolidayModal></HolidayModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportHolidayModal from "@/components/modals/forms/ExportHolidayModal.vue";
+import HolidayModal from "@/components/modals/forms/HolidayModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -158,8 +167,8 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportHolidayModal,
+    HolidayModal,
   },
   setup() {
     const checkedCustomers = ref([]);
@@ -170,8 +179,23 @@ export default defineComponent({
         sortable: true,
       },
       {
-        name: "Blood Group",
-        key: "bg",
+        name: "year",
+        key: "year",
+        sortable: true,
+      },
+      {
+        name: "Type",
+        key: "holiday_type",
+        sortable: true,
+      },
+      {
+        name: "Name",
+        key: "holiday_name",
+        sortable: true,
+      },
+      {
+        name: "Date",
+        key: "date",
         sortable: true,
       },
       {

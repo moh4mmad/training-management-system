@@ -105,7 +105,7 @@
           {{ customer.code }}
         </template>
         <template v-slot:cell-bg="{ row: customer }">
-          {{ customer.bg }}
+          {{ customer.ethnic_group }}
         </template>
         <template v-slot:cell-actions="{ row: customer }">
           <a
@@ -139,15 +139,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportEthnicGroupModal></ExportEthnicGroupModal>
+  <EthnicGroupModal></EthnicGroupModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportEthnicGroupModal from "@/components/modals/forms/ExportEthnicGroupModal.vue";
+import EthnicGroupModal from "@/components/modals/forms/EthnicGroupModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -158,8 +158,8 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportEthnicGroupModal,
+    EthnicGroupModal,
   },
   setup() {
     const checkedCustomers = ref([]);
@@ -170,8 +170,8 @@ export default defineComponent({
         sortable: true,
       },
       {
-        name: "Blood Group",
-        key: "bg",
+        name: "Ethnic Group",
+        key: "ethnic_group",
         sortable: true,
       },
       {

@@ -12,7 +12,7 @@
             v-model="search"
             @input="searchItems()"
             class="form-control form-control-solid w-250px ps-15"
-            placeholder="Search Blood Group"
+            placeholder="Search Industry Sector"
           />
         </div>
         <!--end::Search-->
@@ -47,7 +47,7 @@
             data-bs-target="#kt_modal_add_customer"
           >
             <i class="fas fa-plus"></i>
-            Add Blood Group
+            Add Industry Sector
           </button>
           <!--end::Add customer-->
         </div>
@@ -102,10 +102,13 @@
         :enable-items-per-page-dropdown="true"
       >
         <template v-slot:cell-code="{ row: customer }">
-          {{ customer.code }}
+          {{ customer.sector_code }}
         </template>
-        <template v-slot:cell-bg="{ row: customer }">
-          {{ customer.bg }}
+        <template v-slot:cell-name="{ row: customer }">
+          {{ customer.sector_name }}
+        </template>
+        <template v-slot:cell-desc="{ row: customer }">
+          {{ customer.sector_description }}
         </template>
         <template v-slot:cell-actions="{ row: customer }">
           <a
@@ -139,15 +142,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportIndustrySectorModal></ExportIndustrySectorModal>
+  <IndustrySectorModal></IndustrySectorModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportIndustrySectorModal from "@/components/modals/forms/ExportIndustrySectorModal.vue";
+import IndustrySectorModal from "@/components/modals/forms/IndustrySectorModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -158,20 +161,25 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportIndustrySectorModal,
+    IndustrySectorModal,
   },
   setup() {
     const checkedCustomers = ref([]);
     const tableHeader = ref([
       {
         name: "Code",
-        key: "code",
+        key: "sector_code",
         sortable: true,
       },
       {
-        name: "Blood Group",
-        key: "bg",
+        name: "Name",
+        key: "sector_name",
+        sortable: true,
+      },
+      {
+        name: "Description",
+        key: "sector_descri",
         sortable: true,
       },
       {

@@ -49,7 +49,7 @@
             data-bs-target="#kt_modal_add_customer"
           >
             <i class="fas fa-plus"></i>
-            Add Blood Group
+            Add Industry Sub Sector
           </button>
           <!--end::Add customer-->
         </div>
@@ -104,10 +104,13 @@
         :enable-items-per-page-dropdown="true"
       >
         <template v-slot:cell-code="{ row: customer }">
-          {{ customer.code }}
+          {{ customer.sub_sector_code }}
         </template>
-        <template v-slot:cell-bg="{ row: customer }">
-          {{ customer.bg }}
+        <template v-slot:cell-name="{ row: customer }">
+          {{ customer.sub_sector_name }}
+        </template>
+        <template v-slot:cell-desc="{ row: customer }">
+          {{ customer.sub_sector_description }}
         </template>
         <template v-slot:cell-actions="{ row: customer }">
           <a
@@ -141,15 +144,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportIndustrySubSectorModal></ExportIndustrySubSectorModal>
+  <IndustrySubSectorModal></IndustrySubSectorModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportIndustrySubSectorModal from "@/components/modals/forms/ExportIndustrySubSectorModal.vue";
+import IndustrySubSectorModal from "@/components/modals/forms/IndustrySubSectorModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -160,20 +163,25 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportIndustrySubSectorModal,
+    IndustrySubSectorModal,
   },
   setup() {
     const checkedCustomers = ref([]);
     const tableHeader = ref([
       {
         name: "Code",
-        key: "code",
+        key: "sub_sector_code",
         sortable: true,
       },
       {
-        name: "Blood Group",
-        key: "bg",
+        name: "Name",
+        key: "sub_sector_name",
+        sortable: true,
+      },
+      {
+        name: "Description",
+        key: "sub_sector_description",
         sortable: true,
       },
       {

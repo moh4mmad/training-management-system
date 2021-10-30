@@ -13,7 +13,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_customer_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Blood Group</h2>
+          <h2 class="fw-bolder">Add Sub Sector</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -52,13 +52,53 @@
               <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Code</label>
+                <label class="required fs-6 fw-bold mb-2">Sector Code</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
                 <el-form-item prop="code">
                   <el-input
-                    v-model="formData.code"
+                    v-model="formData.sector_code"
+                    type="text"
+                    placeholder=""
+                  />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="required fs-6 fw-bold mb-2"
+                  >Sub-Sector Code</label
+                >
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="code">
+                  <el-input
+                    v-model="formData.sub_sector_code"
+                    type="text"
+                    placeholder=""
+                  />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="required fs-6 fw-bold mb-2"
+                  >Sub-Sector Name</label
+                >
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="code">
+                  <el-input
+                    v-model="formData.sub_sector_name"
                     type="text"
                     placeholder=""
                   />
@@ -71,7 +111,7 @@
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Sub Sector Description</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
@@ -82,8 +122,8 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
-                  <el-input v-model="formData.bg" />
+                <el-form-item prop="email">
+                  <el-input v-model="formData.description" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -152,17 +192,31 @@ export default defineComponent({
     });
 
     const rules = ref({
-      code: [
+      sector_code: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Sector Code is required",
           trigger: "change",
         },
       ],
-      bg: [
+      sub_sector_code: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Sub Sector Code is required",
+          trigger: "change",
+        },
+      ],
+      sub_sector_description: [
+        {
+          required: true,
+          message: "Description is required",
+          trigger: "change",
+        },
+      ],
+      sub_sector_name: [
+        {
+          required: true,
+          message: "Name is required",
           trigger: "change",
         },
       ],
