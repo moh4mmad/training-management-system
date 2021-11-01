@@ -5,7 +5,7 @@ enum Actions {
   ADD_BODY_ATTRIBUTE = "addBodyAttribute",
   REMOVE_BODY_ATTRIBUTE = "removeBodyAttribute",
   ADD_CLASSNAME = "addClassName",
-  VERIFY_AUTH = "verifyAuth",
+  //VERIFY_AUTH = "verifyAuth",
   LOGIN = "login",
   LOGOUT = "logout",
   REGISTER = "register",
