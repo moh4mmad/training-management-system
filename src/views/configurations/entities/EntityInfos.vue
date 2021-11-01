@@ -101,11 +101,11 @@
         :table-header="tableHeader"
         :enable-items-per-page-dropdown="true"
       >
-        <template v-slot:cell-code="{ row: customer }">
-          {{ customer.code }}
+        <template v-slot:cell-room_no="{ row: customer }">
+          {{ customer.room_no }}
         </template>
-        <template v-slot:cell-bg="{ row: customer }">
-          {{ customer.bg }}
+        <template v-slot:cell-room_location="{ row: customer }">
+          {{ customer.room_location }}
         </template>
         <template v-slot:cell-actions="{ row: customer }">
           <a
@@ -139,15 +139,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportInfoModal></ExportInfoModal>
+  <InfoModal></InfoModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportInfoModal from "@/components/modals/forms/entity/ExportInfoModal.vue";
+import InfoModal from "@/components/modals/forms/entity/InfoModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -158,20 +158,20 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportInfoModal,
+    InfoModal,
   },
   setup() {
     const checkedCustomers = ref([]);
     const tableHeader = ref([
       {
-        name: "Code",
-        key: "code",
+        name: "Room No",
+        key: "room_no",
         sortable: true,
       },
       {
-        name: "Entity Info",
-        key: "bg",
+        name: "Room Location",
+        key: "room_location",
         sortable: true,
       },
       {

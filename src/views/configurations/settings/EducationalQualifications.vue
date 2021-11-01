@@ -148,8 +148,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportEduQualificationModal from "@/components/modals/forms/ExportEduQualificationModal.vue";
-import EduQualificationModal from "@/components/modals/forms/EduQualificationModal.vue";
+import ExportEduQualificationModal from "@/components/modals/forms/settings/ExportEduQualificationModal.vue";
+import EduQualificationModal from "@/components/modals/forms/settings/EduQualificationModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";

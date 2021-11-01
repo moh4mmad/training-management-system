@@ -141,15 +141,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportInfoDetailModal></ExportInfoDetailModal>
+  <InfoDetailModal></InfoDetailModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportInfoDetailModal from "@/components/modals/forms/entity/ExportInfoDetailModal.vue";
+import InfoDetailModal from "@/components/modals/forms/entity/InfoDetailModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -160,8 +160,8 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportInfoDetailModal,
+    InfoDetailModal,
   },
   setup() {
     const checkedCustomers = ref([]);

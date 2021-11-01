@@ -146,8 +146,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportReligionModal from "@/components/modals/forms/ExportReligionModal.vue";
-import ReligionModal from "@/components/modals/forms/ReligionModal.vue";
+import ExportReligionModal from "@/components/modals/forms/settings/ExportReligionModal.vue";
+import ReligionModal from "@/components/modals/forms/settings/ReligionModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";

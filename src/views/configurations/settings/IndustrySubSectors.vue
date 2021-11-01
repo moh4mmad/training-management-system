@@ -151,8 +151,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportIndustrySubSectorModal from "@/components/modals/forms/ExportIndustrySubSectorModal.vue";
-import IndustrySubSectorModal from "@/components/modals/forms/IndustrySubSectorModal.vue";
+import ExportIndustrySubSectorModal from "@/components/modals/forms/settings/ExportIndustrySubSectorModal.vue";
+import IndustrySubSectorModal from "@/components/modals/forms/settings/IndustrySubSectorModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";

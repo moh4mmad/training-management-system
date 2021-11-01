@@ -139,15 +139,15 @@
     </div>
   </div>
 
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <ExportTypeRoleModal></ExportTypeRoleModal>
+  <TypeRoleModal></TypeRoleModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import ExportTypeRoleModal from "@/components/modals/forms/entity/ExportTypeRoleModal.vue";
+import TypeRoleModal from "@/components/modals/forms/entity/TypeRoleModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
@@ -158,19 +158,19 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportCustomerModal,
-    AddCustomerModal,
+    ExportTypeRoleModal,
+    TypeRoleModal,
   },
   setup() {
     const checkedCustomers = ref([]);
     const tableHeader = ref([
       {
-        name: "Code",
+        name: "Role Name",
         key: "code",
         sortable: true,
       },
       {
-        name: "Entity Type Role",
+        name: "Role title",
         key: "bg",
         sortable: true,
       },

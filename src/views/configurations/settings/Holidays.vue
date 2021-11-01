@@ -155,8 +155,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportHolidayModal from "@/components/modals/forms/ExportHolidayModal.vue";
-import HolidayModal from "@/components/modals/forms/HolidayModal.vue";
+import ExportHolidayModal from "@/components/modals/forms/settings/ExportHolidayModal.vue";
+import HolidayModal from "@/components/modals/forms/settings/HolidayModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";

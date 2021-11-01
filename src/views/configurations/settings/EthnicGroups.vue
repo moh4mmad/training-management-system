@@ -146,8 +146,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportEthnicGroupModal from "@/components/modals/forms/ExportEthnicGroupModal.vue";
-import EthnicGroupModal from "@/components/modals/forms/EthnicGroupModal.vue";
+import ExportEthnicGroupModal from "@/components/modals/forms/settings/ExportEthnicGroupModal.vue";
+import EthnicGroupModal from "@/components/modals/forms/settings/EthnicGroupModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import customers from "@/core/data/customers";
