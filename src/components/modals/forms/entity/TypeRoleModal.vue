@@ -13,7 +13,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_customer_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Blood Group</h2>
+          <h2 class="fw-bolder">Add Entity Type Role</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -52,13 +52,13 @@
               <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Code</label>
+                <label class="required fs-6 fw-bold mb-2">Role Name</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="code">
+                <el-form-item prop="role_name">
                   <el-input
-                    v-model="formData.code"
+                    v-model="formData.role_name"
                     type="text"
                     placeholder=""
                   />
@@ -71,7 +71,7 @@
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Role Title</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
@@ -82,8 +82,8 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
-                  <el-input v-model="formData.bg" />
+                <el-form-item prop="role_title">
+                  <el-input v-model="formData.role_title" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -152,17 +152,17 @@ export default defineComponent({
     });
 
     const rules = ref({
-      code: [
+      role_name: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Name is required",
           trigger: "change",
         },
       ],
-      bg: [
+      role_title: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Title is required",
           trigger: "change",
         },
       ],

@@ -13,7 +13,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_customer_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Blood Group</h2>
+          <h2 class="fw-bolder">Add Entity Type</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -52,13 +52,13 @@
               <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Code</label>
+                <label class="required fs-6 fw-bold mb-2">Name</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="code">
+                <el-form-item prop="name">
                   <el-input
-                    v-model="formData.code"
+                    v-model="formData.name"
                     type="text"
                     placeholder=""
                   />
@@ -71,7 +71,7 @@
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Type Level</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
@@ -82,8 +82,8 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
-                  <el-input v-model="formData.bg" />
+                <el-form-item prop="entity_type_level">
+                  <el-input v-model="formData.entity_type_level" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -147,22 +147,22 @@ export default defineComponent({
     const addCustomerModalRef = ref<null | HTMLElement>(null);
     const loading = ref<boolean>(false);
     const formData = ref({
-      code: "1",
-      bg: "B+",
+      name: "",
+      entity_type_level: "",
     });
 
     const rules = ref({
-      code: [
+      name: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Name is required",
           trigger: "change",
         },
       ],
-      bg: [
+      entity_type_level: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Type level  is required",
           trigger: "change",
         },
       ],

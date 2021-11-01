@@ -43,6 +43,24 @@ const Module = [
       },
     ],
   },
+  {
+    heading: "Configuration",
+    route: "/configuration",
+    pages: [
+      {
+        heading: "settings",
+        route: "/settings",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-archive",
+      },
+      {
+        heading: "Entities",
+        route: "/entities",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-archive",
+      },
+    ],
+  },
 ];
 
 export default Module;

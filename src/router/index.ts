@@ -15,6 +15,94 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  //settings
+  {
+    path: "/settings",
+    component: () => import("@/layout/Settings.vue"),
+    children: [
+      {
+        path: "blood-groups",
+        name: "blood groups",
+        component: () =>
+          import("@/views/configurations/settings/BloodGroups.vue"),
+      },
+      {
+        path: "educational-qualifications",
+        name: "Educational Qualifications",
+        component: () =>
+          import(
+            "@/views/configurations/settings/EducationalQualifications.vue"
+          ),
+      },
+
+      {
+        path: "ethnic-groups",
+        name: "Ethnic Groups",
+        component: () =>
+          import("@/views/configurations/settings/EthnicGroups.vue"),
+      },
+      {
+        path: "holidays",
+        name: "Holidays",
+        component: () => import("@/views/configurations/settings/Holidays.vue"),
+      },
+      {
+        path: "industry-sectors",
+        name: "Industry Sectors",
+        component: () =>
+          import("@/views/configurations/settings/IndustrySectors.vue"),
+      },
+      {
+        path: "industry-sub-sectors",
+        name: "Industry Sub Sectors",
+        component: () =>
+          import("@/views/configurations/settings/IndustrySubSectors.vue"),
+      },
+      {
+        path: "religions",
+        name: "Religions",
+        component: () =>
+          import("@/views/configurations/settings/Religions.vue"),
+      },
+    ],
+  },
+  //entities
+  {
+    path: "/entities",
+    component: () => import("@/layout/Entity.vue"),
+    children: [
+      {
+        path: "entity-infos",
+        name: "entity infos",
+        component: () =>
+          import("@/views/configurations/entities/EntityInfos.vue"),
+      },
+      {
+        path: "entity-info-details",
+        name: "entity info details",
+        component: () =>
+          import("@/views/configurations/entities/EntityInfoDetails.vue"),
+      },
+      {
+        path: "entity-types",
+        name: "entity types",
+        component: () =>
+          import("@/views/configurations/entities/EntityTypes.vue"),
+      },
+      {
+        path: "entity-type-roles",
+        name: "entity type roles",
+        component: () =>
+          import("@/views/configurations/entities/EntityTypeRoles.vue"),
+      },
+      {
+        path: "entity-type-role-groups",
+        name: "entity type role groups",
+        component: () =>
+          import("@/views/configurations/entities/EntityTypeRoleGroups.vue"),
+      },
+    ],
+  },
   {
     path: "/components",
     component: () => import("@/layout/Components.vue"),
