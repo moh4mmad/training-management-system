@@ -128,21 +128,21 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     });
   }
 
-  @Action
-  [Actions.VERIFY_AUTH]() {
-    if (JwtService.getToken()) {
-      ApiService.setHeader();
-      ApiService.get("verify")
-        .then(({ data }) => {
-          this.context.commit(Mutations.SET_AUTH, data);
-        })
-        .catch(({ response }) => {
-          this.context.commit(Mutations.SET_ERROR, response.data.errors);
-        });
-    } else {
-      this.context.commit(Mutations.PURGE_AUTH);
-    }
-  }
+  // @Action
+  // [Actions.VERIFY_AUTH]() {
+  //   if (JwtService.getToken()) {
+  //     ApiService.setHeader();
+  //     ApiService.get("verify")
+  //       .then(({ data }) => {
+  //         this.context.commit(Mutations.SET_AUTH, data);
+  //       })
+  //       .catch(({ response }) => {
+  //         this.context.commit(Mutations.SET_ERROR, response.data.errors);
+  //       });
+  //   } else {
+  //     this.context.commit(Mutations.PURGE_AUTH);
+  //   }
+  // }
 
   @Action
   [Actions.UPDATE_USER](payload) {

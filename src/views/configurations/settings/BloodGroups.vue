@@ -22,7 +22,6 @@
       <div class="card-toolbar">
         <!--begin::Toolbar-->
         <div
-          v-if="checkedCustomers.length === 0"
           class="d-flex justify-content-end"
           data-kt-customer-table-toolbar="base"
         >
@@ -51,47 +50,6 @@
           </button>
           <!--end::Add customer-->
         </div>
-        <!--end::Toolbar-->
-        <!--begin::Group actions-->
-        <div
-          v-else
-          class="d-flex justify-content-end align-items-center"
-          data-kt-customer-table-toolbar="selected"
-        >
-          <div class="fw-bolder me-5">
-            <span class="me-2">{{ checkedCustomers.length }}</span
-            >Selected
-          </div>
-          <button
-            type="button"
-            class="btn btn-danger"
-            @click="deleteFewCustomers()"
-          >
-            Delete Selected
-          </button>
-        </div>
-        <!--end::Group actions-->
-        <!--begin::Group actions-->
-        <div
-          class="d-flex justify-content-end align-items-center d-none"
-          data-kt-customer-table-toolbar="selected"
-        >
-          <div class="fw-bolder me-5">
-            <span
-              class="me-2"
-              data-kt-customer-table-select="selected_count"
-            ></span
-            >Selected
-          </div>
-          <button
-            type="button"
-            class="btn btn-danger"
-            data-kt-customer-table-select="delete_selected"
-          >
-            Delete Selected
-          </button>
-        </div>
-        <!--end::Group actions-->
       </div>
       <!--end::Card toolbar-->
     </div>
@@ -144,94 +102,75 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
 import ExportCustomerModal from "@/components/modals/forms/settings/ExportCustomerModal.vue";
 import AddCustomerModal from "@/components/modals/forms/settings/AddCustomerModal.vue";
-import { MenuComponent } from "@/assets/ts/components";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-import customers from "@/core/data/customers";
-import { ICustomer } from "@/core/data/customers";
-// import ApiService from "@/core/services/ApiService";
-import ApiService from "@/core/services/NewApiService";
+import ApiService from "@/core/services/ApiService";
 
 export default defineComponent({
-  name: "customers-listing",
+  name: "blood groups",
   components: {
     Datatable,
     ExportCustomerModal,
     AddCustomerModal,
   },
-  setup() {
-    const checkedCustomers = ref([]);
-    const tableHeader = ref([
-      {
-        name: "Code",
-        key: "code",
-        sortable: true,
-      },
-      {
-        name: "Blood Group",
-        key: "bg",
-        sortable: true,
-      },
-      {
-        name: "Actions",
-        key: "actions",
-        sortable: false,
-      },
-    ]);
-
-    const tableData = ref<Array<ICustomer>>(customers);
-    const initCustomers = ref<Array<ICustomer>>([]);
-
-    onMounted(() => {
-      MenuComponent.reinitialization();
-      setCurrentPageBreadcrumbs("Customers Listing", ["Apps", "Customers"]);
-      initCustomers.value.splice(0, tableData.value.length, ...tableData.value);
-      //getData();
-    });
-
-    // const getData = () => {
-    //   ApiService.get("configurations/blood_groups")
-    //     .then(({ data }) => {
-    //       console.log(data);
-    //     })
-    //     .catch(({ response }) => {
-    //       console.log(response);
-    //     });
-    // };
-
-    const deleteFewCustomers = () => {
-      checkedCustomers.value.forEach((item) => {
-        deleteCustomer(item);
-      });
-      checkedCustomers.value.length = 0;
+  data() {
+    return {
+      tableHeader: [
+        {
+          name: "Code",
+          key: "code",
+          sortable: true,
+        },
+        {
+          name: "Blood Group",
+          key: "bg",
+          sortable: true,
+        },
+        {
+          name: "Actions",
+          key: "actions",
+          sortable: false,
+        },
+      ],
+      lists: [],
+      search: "",
+      tableData: [],
+      oldData: [],
     };
+  },
+  async created() {
+    await this.getData();
+    Object.assign(this.tableData, this.lists);
+  },
+  methods: {
+    async getData() {
+      await ApiService.get("configurations/blood_groups")
+        .then((response) => {
+          this.lists = response.data;
+          this.oldData = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
 
-    const deleteCustomer = (id) => {
-      for (let i = 0; i < tableData.value.length; i++) {
-        if (tableData.value[i].id === id) {
-          tableData.value.splice(i, 1);
-        }
-      }
-    };
-
-    const search = ref<string>("");
-    const searchItems = () => {
-      tableData.value.splice(0, tableData.value.length, ...initCustomers.value);
-      if (search.value !== "") {
-        let results: Array<ICustomer> = [];
-        for (let j = 0; j < tableData.value.length; j++) {
-          if (searchingFunc(tableData.value[j], search.value)) {
-            results.push(tableData.value[j]);
+    searchItems() {
+      if (this.search !== "") {
+        let results: never[] = [];
+        for (let j = 0; j < this.tableData.length; j++) {
+          if (this.searchingFunc(this.tableData[j], this.search)) {
+            results.push(this.tableData[j]);
           }
         }
-        tableData.value.splice(0, tableData.value.length, ...results);
+        this.tableData.splice(0, this.tableData.length, ...results);
+      } else {
+        Object.assign(this.tableData, this.oldData);
       }
-    };
+    },
 
-    const searchingFunc = (obj, value): boolean => {
+    searchingFunc(obj, value) {
       for (let key in obj) {
         if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
           if (obj[key].indexOf(value) != -1) {
@@ -240,30 +179,6 @@ export default defineComponent({
         }
       }
       return false;
-    };
-
-    return {
-      tableData,
-      tableHeader,
-      deleteCustomer,
-      search,
-      searchItems,
-      checkedCustomers,
-      deleteFewCustomers,
-    };
-  },
-  created() {
-    this.getData();
-  },
-  methods: {
-    getData() {
-      ApiService.get("http://localhost:8000/api/configurations/blood_groups")
-        .then(({ data }) => {
-          console.log(data);
-        })
-        .catch(({ response }) => {
-          console.log(response);
-        });
     },
   },
 });
