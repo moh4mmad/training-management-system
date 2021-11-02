@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_add_customer"
-    ref="addCustomerModalRef"
+    id="kt_modal_add_holiday"
+    ref="addHolidayModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -11,14 +11,14 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_add_customer_header">
+        <div class="modal-header" id="kt_modal_add_holiday_header">
           <!--begin::Modal title-->
           <h2 class="fw-bolder">Add Holiday</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
           <div
-            id="kt_modal_add_customer_close"
+            id="kt_modal_add_holiday_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -41,32 +41,14 @@
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_add_customer_scroll"
+              id="kt_modal_add_holiday_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_add_customer_header"
-              data-kt-scroll-wrappers="#kt_modal_add_customer_scroll"
+              data-kt-scroll-dependencies="#kt_modal_add_holiday_header"
+              data-kt-scroll-wrappers="#kt_modal_add_holiday_scroll"
               data-kt-scroll-offset="300px"
             >
-              <!--begin::Input group-->
-              <div class="fv-row mb-7">
-                <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Code</label>
-                <!--end::Label-->
-
-                <!--begin::Input-->
-                <el-form-item prop="code">
-                  <el-input
-                    v-model="formData.code"
-                    type="text"
-                    placeholder=""
-                  />
-                </el-form-item>
-                <!--end::Input-->
-              </div>
-              <!--end::Input group-->
-
               <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
@@ -141,7 +123,8 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="date">
-                  <el-input v-model="formData.date" />
+                  <el-date-picker v-model="formData.date" type="date">
+                  </el-date-picker>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -155,7 +138,7 @@
             <!--begin::Button-->
             <button
               type="reset"
-              id="kt_modal_add_customer_cancel"
+              id="kt_modal_add_holiday_cancel"
               class="btn btn-light me-3"
             >
               Discard
@@ -192,93 +175,73 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { hideModal } from "@/core/helpers/dom";
+import ApiService from "@/core/services/ApiService";
+import {
+    defineComponent,
+    ref
+} from "vue";
+import {
+    hideModal
+} from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
-  name: "add-customer-modal",
-  components: {},
-  setup() {
-    const formRef = ref<null | HTMLFormElement>(null);
-    const addCustomerModalRef = ref<null | HTMLElement>(null);
-    const loading = ref<boolean>(false);
-    const formData = ref({
-      code: "1",
-      bg: "B+",
-    });
-
-    const rules = ref({
-      code: [
-        {
-          required: true,
-          message: "Code is required",
-          trigger: "change",
-        },
-      ],
-      year: [
-        {
-          required: true,
-          message: "Year is required",
-          trigger: "change",
-        },
-      ],
-      holiday_type: [
-        {
-          required: true,
-          message: "Type is required",
-          trigger: "change",
-        },
-      ],
-    });
-
-    const submit = () => {
-      if (!formRef.value) {
-        return;
-      }
-
-      formRef.value.validate((valid) => {
-        if (valid) {
-          loading.value = true;
-
-          setTimeout(() => {
-            loading.value = false;
-
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(addCustomerModalRef.value);
-            });
-          }, 2000);
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
+            name: "add_holiday-modal",
+            components: {},
+            data() {
+                return {
+                    formData: {
+                      name: "",
+                      year: "",
+                      holiday_type: "",
+                      date: "",
+                    },
+                    rules: [{
+                        name: [{
+                            required: true,
+                            message: "Name is required",
+                            trigger: "change",
+                        }, ],
+                        year: [{
+                            required: true,
+                            message: "Year is required",
+                            trigger: "change",
+                        }, ],
+                        holiday_type: [{
+                            required: true,
+                            message: "Type is required",
+                            trigger: "change",
+                        }, ],
+                        date: [{
+                            type: 'date',
+                            required: true,
+                            message: "Date is required",
+                            trigger: "change",
+                        }, ],
+                    }]
+                };
             },
-          });
-          return false;
-        }
-      });
-    };
-
-    return {
-      formData,
-      rules,
-      submit,
-      formRef,
-      loading,
-      addCustomerModalRef,
-    };
-  },
-});
+            methods: {
+                async submit() {
+                    await ApiService.post("configurations/holidays", this.formData)
+                        .then((response) => {
+                           Swal.fire({
+                              text: response.data.message,
+                              icon: "success",
+                              buttonsStyling: false,
+                              confirmButtonText: "Ok, got it!",
+                              customClass: {
+                                confirmButton: "btn btn-primary",
+                              },
+                            }).then(() => {
+                              hideModal(addHolidayModalRef.value);
+                            });
+                        })
+                        .catch(({
+                            response
+                        }) => {
+                            console.log(response);
+                        });
+                },
+            });
 </script>
