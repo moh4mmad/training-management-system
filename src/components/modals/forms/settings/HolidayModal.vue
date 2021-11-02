@@ -58,14 +58,29 @@
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Email address must be active"
+                    title="Year"
                   ></i>
                 </label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="email">
-                  <el-input v-model="formData.year" />
+                <el-form-item prop="year">
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Year"
+                    v-model="formData.year"
+                  >
+                    <el-option label="2021" value="2021">2021</el-option>
+                    <el-option label="2022" value="2022">2022</el-option>
+                    <el-option label="2023" value="2023">2023</el-option>
+                    <el-option label="2024" value="2024">2024</el-option>
+                    <el-option label="2025" value="2025">2025</el-option>
+                    <el-option label="2026" value="2026">2026</el-option>
+                    <el-option label="2027" value="2027">2027</el-option>
+                    <el-option label="2028" value="2028">2028</el-option>
+                    <el-option label="2029" value="2029">2029</el-option>
+                    <el-option label="2030" value="2030">2030</el-option>
+                  </el-select>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -78,13 +93,13 @@
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Email address must be active"
+                    title="Type"
                   ></i>
                 </label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="email">
+                <el-form-item prop="holiday_type">
                   <el-input v-model="formData.holiday_type" />
                 </el-form-item>
                 <!--end::Input-->
@@ -97,13 +112,13 @@
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Email address must be active"
+                    title="Name"
                   ></i>
                 </label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="email">
+                <el-form-item prop="holiday_name">
                   <el-input v-model="formData.holiday_name" />
                 </el-form-item>
                 <!--end::Input-->
@@ -116,14 +131,19 @@
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Email address must be active"
+                    title="Date"
                   ></i>
                 </label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
                 <el-form-item prop="date">
-                  <el-date-picker v-model="formData.date" type="date">
+                  <el-date-picker
+                    v-model="formData.date"
+                    value-format="YYYY-MM-DD"
+                    format="DD-MM-YYYY"
+                    type="date"
+                  >
                   </el-date-picker>
                 </el-form-item>
                 <!--end::Input-->
@@ -176,72 +196,125 @@
 
 <script lang="ts">
 import ApiService from "@/core/services/ApiService";
-import {
-    defineComponent,
-    ref
-} from "vue";
-import {
-    hideModal
-} from "@/core/helpers/dom";
+import { defineComponent, ref } from "vue";
+import { hideModal } from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useBus } from "../../../../bus";
 
 export default defineComponent({
-            name: "add_holiday-modal",
-            components: {},
-            data() {
-                return {
-                    formData: {
-                      name: "",
-                      year: "",
-                      holiday_type: "",
-                      date: "",
-                    },
-                    rules: [{
-                        name: [{
-                            required: true,
-                            message: "Name is required",
-                            trigger: "change",
-                        }, ],
-                        year: [{
-                            required: true,
-                            message: "Year is required",
-                            trigger: "change",
-                        }, ],
-                        holiday_type: [{
-                            required: true,
-                            message: "Type is required",
-                            trigger: "change",
-                        }, ],
-                        date: [{
-                            type: 'date',
-                            required: true,
-                            message: "Date is required",
-                            trigger: "change",
-                        }, ],
-                    }]
-                };
-            },
-            methods: {
-                async submit() {
-                    await ApiService.post("configurations/holidays", this.formData)
-                        .then((response) => {
-                           Swal.fire({
-                              text: response.data.message,
-                              icon: "success",
-                              buttonsStyling: false,
-                              confirmButtonText: "Ok, got it!",
-                              customClass: {
-                                confirmButton: "btn btn-primary",
-                              },
-                            }).then(() => {
-                              hideModal(addHolidayModalRef.value);
-                            });
-                        })
-                        .catch(({
-                            response
-                        }) => {
-                            console.log(response);
-                        });
-                },
+  name: "add_holiday-modal",
+  components: {},
+  props: {
+    data: { type: Object },
+  },
+  setup(props) {
+    const formData = ref(props.data);
+    const formRef = ref<null | HTMLFormElement>(null);
+    const addHolidayModalRef = ref<null | HTMLElement>(null);
+    const loading = ref<boolean>(false);
+    const update = ref<boolean>(false);
+    const rules = ref({
+      year: [
+        {
+          required: true,
+          message: "Year is required",
+          trigger: "change",
+        },
+      ],
+      holiday_type: [
+        {
+          required: true,
+          message: "Type is required",
+          trigger: "change",
+        },
+      ],
+      date: [
+        {
+          type: "date",
+          required: true,
+          message: "Date is required",
+          trigger: "change",
+        },
+      ],
+    });
+    const { bus } = useBus();
+
+    bus.on("edit-modal-data", (data) => {
+      update.value = true;
+      formData.value = data;
+    });
+
+    bus.on("add-modal-data", () => {
+      update.value = false;
+      formData.value = {
+        holiday_name: "",
+        year: "2021",
+        holiday_type: "",
+        date: "",
+      };
+    });
+
+    const submit = () => {
+      if (!formRef.value) {
+        return;
+      }
+
+      formRef.value.validate(async (valid) => {
+        if (valid) {
+          loading.value = true;
+          const action = update.value ? "update" : "post";
+          const url = update.value
+            ? "configurations/holidays/" + `${formData?.value?.id}`
+            : "configurations/holidays";
+
+          await ApiService[action](url, formData.value)
+            .then((response) => {
+              loading.value = false;
+              bus.emit("holiday-updated", true);
+              if (response.status == 200) {
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                }).then(() => {
+                  hideModal(addHolidayModalRef.value);
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              loading.value = false;
+              console.log(response);
             });
+        }
+      });
+    };
+
+    return {
+      formData,
+      rules,
+      submit,
+      formRef,
+      loading,
+      addHolidayModalRef,
+    };
+  },
+});
 </script>

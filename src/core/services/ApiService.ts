@@ -1,5 +1,5 @@
 import JwtService from "@/core/services/JwtService";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { App } from "vue";
 import VueAxios from "vue-axios";
 
@@ -25,13 +25,13 @@ class ApiService {
       );
       return response;
     } catch (error) {
-      throw new Error(`[KT] ApiService ${error}`);
+      return error.response;
     }
   }
 
   public static async post(
     slug: string,
-    params: AxiosRequestConfig
+    params: unknown
   ): Promise<AxiosResponse> {
     try {
       const response = await ApiService.vueInstance.axios.post(
@@ -40,13 +40,13 @@ class ApiService {
       );
       return response;
     } catch (error) {
-      throw new Error(`[KT] ApiService ${error}`);
+      return error.response;
     }
   }
 
   public static async update(
     slug: string,
-    params: AxiosRequestConfig
+    params: unknown
   ): Promise<AxiosResponse> {
     try {
       const response = await ApiService.vueInstance.axios.put(
@@ -55,7 +55,7 @@ class ApiService {
       );
       return response;
     } catch (error) {
-      throw new Error(`[RWV] ApiService ${error}`);
+      return error.response;
     }
   }
 
@@ -66,7 +66,7 @@ class ApiService {
       );
       return response;
     } catch (error) {
-      throw new Error(`[RWV] ApiService ${error}`);
+      return error.response;
     }
   }
 }
