@@ -25,21 +25,8 @@
           class="d-flex justify-content-end"
           data-kt-holiday-table-toolbar="base"
         >
-          <!--begin::Export-->
           <button
-            type="button"
-            class="btn btn-light-primary me-3"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_holidays_export_modal"
-          >
-            <span class="svg-icon svg-icon-2">
-              <inline-svg src="media/icons/duotune/arrows/arr078.svg" />
-            </span>
-            Export
-          </button>
-          <!--end::Export-->
-          <!--begin::Add holiday-->
-          <button
+            @click="add"
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
@@ -48,7 +35,6 @@
             <i class="fas fa-plus"></i>
             Add Holiday
           </button>
-          <!--end::Add holiday-->
         </div>
       </div>
       <!--end::Card toolbar-->
@@ -59,6 +45,9 @@
         :table-header="tableHeader"
         :enable-items-per-page-dropdown="true"
       >
+        <template v-slot:cell-sl="{ row }">
+          {{ row.id }}
+        </template>
         <template v-slot:cell-year="{ row: holiday }">
           {{ holiday.year }}
         </template>
@@ -72,39 +61,101 @@
           {{ holiday.date }}
         </template>
         <template v-slot:cell-actions="{ row: holiday }">
-          <a
-            :href="holiday.id"
+          <button
+            @click="view(holiday)"
+            data-bs-toggle="modal"
+            data-bs-target="#holiday_details"
             class="
               btn btn-icon btn-bg-light btn-active-color-primary btn-sm
               me-1
             "
           >
             <i class="fas fa-eye"></i>
-          </a>
+          </button>
 
-          <a
-            href="#"
+          <button
+            @click="edit(holiday)"
+            data-bs-toggle="modal"
+            data-bs-target="#kt_modal_add_holiday"
             class="
               btn btn-icon btn-bg-light btn-active-color-primary btn-sm
               me-1
             "
           >
             <i class="fas fa-pencil-alt"></i>
-          </a>
+          </button>
 
-          <a
-            href="#"
+          <button
+            @click="Delete(holiday.id)"
             class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
           >
             <i class="fas fa-trash-alt"></i>
-          </a>
+          </button>
         </template>
       </Datatable>
     </div>
   </div>
 
+  <div class="modal fade" id="holiday_details" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog mw-650px">
+      <div class="modal-content">
+        <div class="modal-header" id="kt_modal_add_holiday_header">
+          <h2 class="fw-bolder">Holiday Details</h2>
+          <div
+            id="kt_modal_add_holiday_close"
+            data-bs-dismiss="modal"
+            class="btn btn-icon btn-sm btn-active-icon-primary"
+          >
+            <span class="svg-icon svg-icon-1">
+              <inline-svg src="media/icons/duotune/arrows/arr061.svg" />
+            </span>
+          </div>
+        </div>
+        <div class="modal-body py-10 px-lg-17">
+          <div class="table-responsive mt-5">
+            <table
+              class="
+                table table-row-dashed table-row-gray-300
+                align-middle
+                gs-0
+                gy-4
+              "
+            >
+              <thead>
+                <tr class="border-0">
+                  <th>Year</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="fw-bold">{{ data.year }}</td>
+                  <td class="fw-bold">{{ data.holiday_name }}</td>
+                  <td class="fw-bold">
+                    {{ data.holiday_type }}
+                  </td>
+                  <td class="fw-bold">
+                    {{ data.date }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <ExportHolidayModal></ExportHolidayModal>
-  <HolidayModal></HolidayModal>
+  <HolidayModal :data="data"></HolidayModal>
 </template>
 
 <script lang="ts">
@@ -113,6 +164,7 @@ import Datatable from "@/components/kt-datatable/KTDatatable.vue";
 import ExportHolidayModal from "@/components/modals/forms/settings/ExportHolidayModal.vue";
 import HolidayModal from "@/components/modals/forms/settings/HolidayModal.vue";
 import ApiService from "@/core/services/ApiService";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
   name: "holidays",
@@ -124,6 +176,11 @@ export default defineComponent({
   data() {
     return {
       tableHeader: [
+        {
+          name: "sl",
+          key: "sl",
+          sortable: true,
+        },
         {
           name: "year",
           key: "year",
@@ -153,19 +210,22 @@ export default defineComponent({
       lists: [],
       search: "",
       tableData: [],
-      oldData: [],
+      data: {},
     };
   },
   async created() {
     await this.getData();
     Object.assign(this.tableData, this.lists);
+    this.emitter.on("holiday-updated", async () => {
+      await this.getData();
+      Object.assign(this.tableData, this.lists);
+    });
   },
   methods: {
     async getData() {
       await ApiService.get("configurations/holidays")
         .then((response) => {
           this.lists = response.data;
-          this.oldData = response.data;
         })
         .catch(({ response }) => {
           console.log(response);
@@ -182,7 +242,7 @@ export default defineComponent({
         }
         this.tableData.splice(0, this.tableData.length, ...results);
       } else {
-        Object.assign(this.tableData, this.oldData);
+        Object.assign(this.tableData, this.lists);
       }
     },
 
@@ -195,6 +255,40 @@ export default defineComponent({
         }
       }
       return false;
+    },
+
+    edit(data) {
+      this.emitter.emit("edit-modal-data", data);
+    },
+
+    add() {
+      this.emitter.emit("add-modal-data", true);
+    },
+
+    view(holiday) {
+      this.data = holiday;
+    },
+
+    Delete(id) {
+      Swal.fire({
+        title: "Are you sure you want to delete it?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          ApiService.delete("configurations/holidays/" + `${id}`)
+            .then((response) => {
+              this.emitter.emit("holiday-updated", true);
+              Swal.fire("Deleted!", response.data.message, "success");
+            })
+            .catch(({ response }) => {
+              console.log(response);
+            });
+        }
+      });
     },
   },
 });
