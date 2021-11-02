@@ -1,8 +1,7 @@
-import { App } from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
 import JwtService from "@/core/services/JwtService";
-import { AxiosResponse, AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { App } from "vue";
+import VueAxios from "vue-axios";
 
 class ApiService {
   public static API_URL = "http://localhost:8000/api";
@@ -39,7 +38,7 @@ class ApiService {
         `${ApiService.API_URL}/${slug}`,
         params
       );
-      return response.data;
+      return response;
     } catch (error) {
       throw new Error(`[KT] ApiService ${error}`);
     }
@@ -54,7 +53,7 @@ class ApiService {
         `${ApiService.API_URL}/${slug}`,
         params
       );
-      return response.data;
+      return response;
     } catch (error) {
       throw new Error(`[RWV] ApiService ${error}`);
     }
@@ -65,7 +64,7 @@ class ApiService {
       const response = await ApiService.vueInstance.axios.delete(
         `${ApiService.API_URL}/${slug}`
       );
-      return response.data;
+      return response;
     } catch (error) {
       throw new Error(`[RWV] ApiService ${error}`);
     }
