@@ -139,14 +139,12 @@
     </div>
   </div>
 
-  <ExportTypeRoleModal></ExportTypeRoleModal>
   <TypeRoleModal></TypeRoleModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportTypeRoleModal from "@/components/modals/forms/entity/ExportTypeRoleModal.vue";
 import TypeRoleModal from "@/components/modals/forms/entity/TypeRoleModal.vue";
 import { MenuComponent } from "@/assets/ts/components";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
@@ -158,7 +156,6 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     Datatable,
-    ExportTypeRoleModal,
     TypeRoleModal,
   },
   setup() {
