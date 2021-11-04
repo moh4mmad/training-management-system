@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_add_customer"
-    ref="addCustomerModalRef"
+    id="kt_modal_add_type_role"
+    ref="addModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -11,14 +11,14 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_add_customer_header">
+        <div class="modal-header" id="kt_modal_add_type_role_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Entity Type Role</h2>
+          <h2 class="fw-bolder">Add Type Role</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
           <div
-            id="kt_modal_add_customer_close"
+            id="kt_modal_add_type_role_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -41,33 +41,64 @@
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_add_customer_scroll"
+              id="kt_modal_add_type_role_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_add_customer_header"
-              data-kt-scroll-wrappers="#kt_modal_add_customer_scroll"
+              data-kt-scroll-dependencies="#kt_modal_add_type_role_header"
+              data-kt-scroll-wrappers="#kt_modal_add_type_role_scroll"
               data-kt-scroll-offset="300px"
             >
-              <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Role Name</label>
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Types</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Types"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="entity_type_id">
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Type"
+                    v-model="formData.entity_type_id"
+                  >
+                    <el-option
+                      v-for="types in entityTypes"
+                      :key="types.id"
+                      :label="types.name"
+                      :value="types.id"
+                      >{{ types.name }}</el-option
+                    >
+                  </el-select>
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Role Name</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Role Name"
+                  ></i>
+                </label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
                 <el-form-item prop="role_name">
-                  <el-input
-                    v-model="formData.role_name"
-                    type="text"
-                    placeholder=""
-                  />
+                  <el-input v-model="formData.role_name" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
-              <!--end::Input group-->
-
-              <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
@@ -76,7 +107,7 @@
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Email address must be active"
+                    title="Role Title"
                   ></i>
                 </label>
                 <!--end::Label-->
@@ -87,7 +118,25 @@
                 </el-form-item>
                 <!--end::Input-->
               </div>
-              <!--end::Input group-->
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Level</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Level"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="level">
+                  <el-input v-model="formData.level" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
             </div>
             <!--end::Scroll-->
           </div>
@@ -98,7 +147,7 @@
             <!--begin::Button-->
             <button
               type="reset"
-              id="kt_modal_add_customer_cancel"
+              id="kt_modal_add_type_role_cancel"
               class="btn btn-light me-3"
             >
               Discard
@@ -135,37 +184,67 @@
 </template>
 
 <script lang="ts">
+import ApiService from "@/core/services/ApiService";
 import { defineComponent, ref } from "vue";
 import { hideModal } from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useBus } from "../../../../bus";
 
 export default defineComponent({
-  name: "add-customer-modal",
+  name: "add_type_role",
   components: {},
+  props: {
+    data: { type: Object },
+  },
   setup() {
-    const formRef = ref<null | HTMLFormElement>(null);
-    const addCustomerModalRef = ref<null | HTMLElement>(null);
-    const loading = ref<boolean>(false);
     const formData = ref({
-      code: "1",
-      bg: "B+",
+      id: "",
+      role_name: "",
+      role_title: "",
+      level: "",
     });
-
+    const formRef = ref<null | HTMLFormElement>(null);
+    const addModalRef = ref<null | HTMLElement>(null);
+    const loading = ref<boolean>(false);
+    const update = ref<boolean>(false);
     const rules = ref({
       role_name: [
         {
           required: true,
-          message: "Name is required",
+          message: "Role Name is required",
           trigger: "change",
         },
       ],
       role_title: [
         {
           required: true,
-          message: "Title is required",
+          message: "Role Title is required",
           trigger: "change",
         },
       ],
+      level: [
+        {
+          required: true,
+          message: "Level is required",
+          trigger: "change",
+        },
+      ],
+    });
+    const { bus } = useBus();
+
+    bus.on("edit-modal-data", (data) => {
+      update.value = true;
+      formData.value = data;
+    });
+
+    bus.on("add-modal-data", () => {
+      update.value = false;
+      formData.value = {
+        id: "",
+        role_name: "",
+        role_title: "",
+        level: "",
+      };
     });
 
     const submit = () => {
@@ -173,36 +252,50 @@ export default defineComponent({
         return;
       }
 
-      formRef.value.validate((valid) => {
+      formRef.value.validate(async (valid) => {
         if (valid) {
           loading.value = true;
+          const action = update.value ? "update" : "post";
+          const url = update.value
+            ? "entity/type_roles/" + `${formData?.value?.id}`
+            : "entity/type_roles";
 
-          setTimeout(() => {
-            loading.value = false;
-
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(addCustomerModalRef.value);
+          await ApiService[action](url, formData.value)
+            .then((response) => {
+              loading.value = false;
+              bus.emit("role-updated", true);
+              if (response.status == 200) {
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                }).then(() => {
+                  hideModal(addModalRef.value);
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              loading.value = false;
+              console.log(response);
             });
-          }, 2000);
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-          return false;
         }
       });
     };
@@ -213,8 +306,27 @@ export default defineComponent({
       submit,
       formRef,
       loading,
-      addCustomerModalRef,
+      addModalRef,
     };
+  },
+  data() {
+    return {
+      entityTypes: [],
+    };
+  },
+  async created() {
+    await this.getTypes();
+  },
+  methods: {
+    async getTypes() {
+      await ApiService.get("entity/types")
+        .then((response) => {
+          this.entityTypes = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
   },
 });
 </script>
