@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_add_customer"
-    ref="addCustomerModalRef"
+    id="kt_modal_add_blood_group"
+    ref="addModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -11,14 +11,14 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_add_customer_header">
+        <div class="modal-header" id="kt_modal_add_blood_group_header">
           <!--begin::Modal title-->
           <h2 class="fw-bolder">Add Blood Group</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
           <div
-            id="kt_modal_add_customer_close"
+            id="kt_modal_add_blood_group_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -41,42 +41,42 @@
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_add_customer_scroll"
+              id="kt_modal_add_blood_group_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_add_customer_header"
-              data-kt-scroll-wrappers="#kt_modal_add_customer_scroll"
+              data-kt-scroll-dependencies="#kt_modal_add_blood_group_header"
+              data-kt-scroll-wrappers="#kt_modal_add_blood_group_scroll"
               data-kt-scroll-offset="300px"
             >
-              <!--begin::Input group-->
-              <div class="fv-row mb-7">
-                <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Code</label>
-                <!--end::Label-->
-
-                <!--begin::Input-->
-                <el-form-item prop="code">
-                  <el-input
-                    v-model="formData.code"
-                    type="text"
-                    placeholder=""
-                  />
-                </el-form-item>
-                <!--end::Input-->
-              </div>
-              <!--end::Input group-->
-
-              <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Bg</span>
+                  <span class="required">Code</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Email address must be active"
+                    title="Code"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="code">
+                  <el-input v-model="formData.code" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Blood Group</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Blood Group"
                   ></i>
                 </label>
                 <!--end::Label-->
@@ -87,7 +87,6 @@
                 </el-form-item>
                 <!--end::Input-->
               </div>
-              <!--end::Input group-->
             </div>
             <!--end::Scroll-->
           </div>
@@ -98,7 +97,7 @@
             <!--begin::Button-->
             <button
               type="reset"
-              id="kt_modal_add_customer_cancel"
+              id="kt_modal_add_blood_group_cancel"
               class="btn btn-light me-3"
             >
               Discard
@@ -135,37 +134,58 @@
 </template>
 
 <script lang="ts">
+import ApiService from "@/core/services/ApiService";
 import { defineComponent, ref } from "vue";
 import { hideModal } from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useBus } from "../../../../bus";
 
 export default defineComponent({
-  name: "add-customer-modal",
+  name: "add_blood_group",
   components: {},
+  props: {
+    data: { type: Object },
+  },
   setup() {
-    const formRef = ref<null | HTMLFormElement>(null);
-    const addCustomerModalRef = ref<null | HTMLElement>(null);
-    const loading = ref<boolean>(false);
     const formData = ref({
-      code: "1",
-      bg: "B+",
+      code: "",
+      id: "",
+      bg: "",
     });
-
+    const formRef = ref<null | HTMLFormElement>(null);
+    const addModalRef = ref<null | HTMLElement>(null);
+    const loading = ref<boolean>(false);
+    const update = ref<boolean>(false);
     const rules = ref({
       code: [
         {
           required: true,
-          message: "Blood group code is required",
+          message: "Code is required",
           trigger: "change",
         },
       ],
       bg: [
         {
           required: true,
-          message: "Blood group bg  is required",
+          message: "Blood Group is required",
           trigger: "change",
         },
       ],
+    });
+    const { bus } = useBus();
+
+    bus.on("edit-modal-data", (data) => {
+      update.value = true;
+      formData.value = data;
+    });
+
+    bus.on("add-modal-data", () => {
+      update.value = false;
+      formData.value = {
+        id: "",
+        code: "",
+        bg: "",
+      };
     });
 
     const submit = () => {
@@ -173,36 +193,50 @@ export default defineComponent({
         return;
       }
 
-      formRef.value.validate((valid) => {
+      formRef.value.validate(async (valid) => {
         if (valid) {
           loading.value = true;
+          const action = update.value ? "update" : "post";
+          const url = update.value
+            ? "configurations/blood_groups/" + `${formData?.value?.id}`
+            : "configurations/blood_groups";
 
-          setTimeout(() => {
-            loading.value = false;
-
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(addCustomerModalRef.value);
+          await ApiService[action](url, formData.value)
+            .then((response) => {
+              loading.value = false;
+              bus.emit("industry-updated", true);
+              if (response.status == 200) {
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                }).then(() => {
+                  hideModal(addModalRef.value);
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              loading.value = false;
+              console.log(response);
             });
-          }, 2000);
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-          return false;
         }
       });
     };
@@ -213,7 +247,7 @@ export default defineComponent({
       submit,
       formRef,
       loading,
-      addCustomerModalRef,
+      addModalRef,
     };
   },
 });

@@ -154,14 +154,12 @@
     </div>
   </div>
 
-  <ExportHolidayModal></ExportHolidayModal>
   <HolidayModal :data="data"></HolidayModal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import Datatable from "@/components/kt-datatable/KTDatatable.vue";
-import ExportHolidayModal from "@/components/modals/forms/settings/ExportHolidayModal.vue";
 import HolidayModal from "@/components/modals/forms/settings/HolidayModal.vue";
 import ApiService from "@/core/services/ApiService";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -170,7 +168,6 @@ export default defineComponent({
   name: "holidays",
   components: {
     Datatable,
-    ExportHolidayModal,
     HolidayModal,
   },
   data() {
