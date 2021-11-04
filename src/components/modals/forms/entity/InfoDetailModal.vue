@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_add_customer"
-    ref="addCustomerModalRef"
+    id="kt_modal_add_info_details"
+    ref="addModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -11,14 +11,14 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_add_customer_header">
+        <div class="modal-header" id="kt_modal_add_info_details_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Info Detail</h2>
+          <h2 class="fw-bolder">Add Info Details</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
           <div
-            id="kt_modal_add_customer_close"
+            id="kt_modal_add_info_details_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -41,33 +41,64 @@
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_add_customer_scroll"
+              id="kt_modal_add_info_details_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_add_customer_header"
-              data-kt-scroll-wrappers="#kt_modal_add_customer_scroll"
+              data-kt-scroll-dependencies="#kt_modal_add_info_details_header"
+              data-kt-scroll-wrappers="#kt_modal_add_info_details_scroll"
               data-kt-scroll-offset="300px"
             >
-              <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-bold mb-2">Room No</label>
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Info</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Types"
+                  ></i>
+                </label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="code">
-                  <el-input
-                    v-model="formData.room_no"
-                    type="text"
-                    placeholder=""
-                  />
+                <el-form-item prop="entity_type_id">
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Infos"
+                    v-model="formData.entity_type_id"
+                  >
+                    <el-option
+                      v-for="infos in entityInfos"
+                      :key="infos.id"
+                      :label="infos.entity_short_name"
+                      :value="infos.id"
+                      >{{ infos.entity_short_name }}</el-option
+                    >
+                  </el-select>
                 </el-form-item>
                 <!--end::Input-->
               </div>
-              <!--end::Input group-->
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Room Number</span>
 
-              <!--begin::Input group-->
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Room Number"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="room_no">
+                  <el-input v-model="formData.room_no" type="number" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
               <div class="fv-row mb-7">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
@@ -76,18 +107,55 @@
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Email address must be active"
+                    title="Room Location"
                   ></i>
                 </label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="bg">
+                <el-form-item prop="room_location">
                   <el-input v-model="formData.room_location" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
-              <!--end::Input group-->
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Room Capacity</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Room Capacity"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="room_capacity">
+                  <el-input v-model="formData.room_capacity" type="number" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Room Equipment</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Room Equipment"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="room_equipment">
+                  <el-input v-model="formData.room_equipment" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
             </div>
             <!--end::Scroll-->
           </div>
@@ -98,7 +166,7 @@
             <!--begin::Button-->
             <button
               type="reset"
-              id="kt_modal_add_customer_cancel"
+              id="kt_modal_add_info_details_cancel"
               class="btn btn-light me-3"
             >
               Discard
@@ -135,37 +203,78 @@
 </template>
 
 <script lang="ts">
+import ApiService from "@/core/services/ApiService";
 import { defineComponent, ref } from "vue";
 import { hideModal } from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useBus } from "../../../../bus";
 
 export default defineComponent({
-  name: "add-customer-modal",
+  name: "add_info_details",
   components: {},
+  props: {
+    data: { type: Object },
+  },
   setup() {
-    const formRef = ref<null | HTMLFormElement>(null);
-    const addCustomerModalRef = ref<null | HTMLElement>(null);
-    const loading = ref<boolean>(false);
     const formData = ref({
+      id: "",
+      entity_type_id: "",
       room_no: "",
       room_location: "",
+      room_capacity: "",
+      room_equipment: "",
     });
-
+    const formRef = ref<null | HTMLFormElement>(null);
+    const addModalRef = ref<null | HTMLElement>(null);
+    const loading = ref<boolean>(false);
+    const update = ref<boolean>(false);
     const rules = ref({
       room_no: [
         {
           required: true,
-          message: "Room no is required",
+          message: "Room Number is required",
           trigger: "change",
         },
       ],
       room_location: [
         {
           required: true,
-          message: "Location  is required",
+          message: "Room Location is required",
           trigger: "change",
         },
       ],
+      room_capacity: [
+        {
+          required: true,
+          message: "Room Capacity is required",
+          trigger: "change",
+        },
+      ],
+      room_equipment: [
+        {
+          required: true,
+          message: "Room Equipment is required",
+          trigger: "change",
+        },
+      ],
+    });
+    const { bus } = useBus();
+
+    bus.on("edit-modal-data", (data) => {
+      update.value = true;
+      formData.value = data;
+    });
+
+    bus.on("add-modal-data", () => {
+      update.value = false;
+      formData.value = {
+        id: "",
+        entity_type_id: "",
+        room_no: "",
+        room_location: "",
+        room_capacity: "",
+        room_equipment: "",
+      };
     });
 
     const submit = () => {
@@ -173,36 +282,50 @@ export default defineComponent({
         return;
       }
 
-      formRef.value.validate((valid) => {
+      formRef.value.validate(async (valid) => {
         if (valid) {
           loading.value = true;
+          const action = update.value ? "update" : "post";
+          const url = update.value
+            ? "entity/info_details/" + `${formData?.value?.id}`
+            : "entity/info_details";
 
-          setTimeout(() => {
-            loading.value = false;
-
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(addCustomerModalRef.value);
+          await ApiService[action](url, formData.value)
+            .then((response) => {
+              loading.value = false;
+              bus.emit("infoDetails-updated", true);
+              if (response.status == 200) {
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                }).then(() => {
+                  hideModal(addModalRef.value);
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              loading.value = false;
+              console.log(response);
             });
-          }, 2000);
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-          return false;
         }
       });
     };
@@ -213,8 +336,27 @@ export default defineComponent({
       submit,
       formRef,
       loading,
-      addCustomerModalRef,
+      addModalRef,
     };
+  },
+  data() {
+    return {
+      entityInfos: [],
+    };
+  },
+  async created() {
+    await this.getInfos();
+  },
+  methods: {
+    async getInfos() {
+      await ApiService.get("entity/infos")
+        .then((response) => {
+          this.entityInfos = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
   },
 });
 </script>
