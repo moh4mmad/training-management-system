@@ -2,7 +2,8 @@ import JwtService from "@/core/services/JwtService";
 import axios, { AxiosResponse } from "axios";
 import { App } from "vue";
 import VueAxios from "vue-axios";
-
+import store from "@/store";
+import { Actions } from "@/store/enums/StoreEnums";
 class ApiService {
   public static API_URL = "http://localhost:8000/api";
   public static vueInstance: App;
@@ -15,16 +16,20 @@ class ApiService {
   public static setHeader(): void {
     ApiService.vueInstance.axios.defaults.headers.common[
       "Authorization"
-    ] = `Token ${JwtService.getToken()}`;
+    ] = `Bearer ${JwtService.getToken()}`;
   }
 
   public static async get(slug = "" as string): Promise<AxiosResponse> {
     try {
+      ApiService.setHeader();
       const response = await ApiService.vueInstance.axios.get(
         `${ApiService.API_URL}/${slug}`
       );
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status == 401) {
+        store.dispatch(Actions.LOGOUT);
+      }
       return error.response;
     }
   }
@@ -39,7 +44,10 @@ class ApiService {
         params
       );
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status == 401) {
+        store.dispatch(Actions.LOGOUT);
+      }
       return error.response;
     }
   }
@@ -54,7 +62,10 @@ class ApiService {
         params
       );
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status == 401) {
+        store.dispatch(Actions.LOGOUT);
+      }
       return error.response;
     }
   }
@@ -65,7 +76,10 @@ class ApiService {
         `${ApiService.API_URL}/${slug}`
       );
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status == 401) {
+        store.dispatch(Actions.LOGOUT);
+      }
       return error.response;
     }
   }
