@@ -10,29 +10,16 @@
     style="background-image: url('media/illustrations/sketchy-1/14.png')"
   >
     <!--begin::Content-->
-    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
-      <!--begin::Logo-->
-      <a href="#" class="mb-12">
-        <img alt="Logo" src="media/logos/logo-1.svg" class="h-45px" />
-      </a>
-      <!--end::Logo-->
-
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10">
+      <div class="text-center mb-10">
+        <h1 class="text-dark mb-3">Training Management System</h1>
+      </div>
       <router-view></router-view>
     </div>
     <!--end::Content-->
 
     <!--begin::Footer-->
-    <div class="d-flex flex-center flex-column-auto p-10">
-      <!--begin::Links-->
-      <div class="d-flex align-items-center fw-bold fs-6">
-        <a href="#" class="text-muted text-hover-primary px-2">About</a>
-
-        <a href="#" class="text-muted text-hover-primary px-2">Contact</a>
-
-        <a href="#" class="text-muted text-hover-primary px-2">Contact Us</a>
-      </div>
-      <!--end::Links-->
-    </div>
+    <div class="d-flex flex-center flex-column-auto p-10"></div>
     <!--end::Footer-->
   </div>
 </template>

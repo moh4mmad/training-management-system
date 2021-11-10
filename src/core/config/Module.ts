@@ -2,6 +2,16 @@ const Module = [
   {
     pages: [
       {
+        heading: "Association",
+        route: "/association",
+        svgIcon: "media/icons/duotune/art/art002.svg",
+        fontIcon: "bi-app-indicator",
+      },
+    ],
+  },
+  {
+    pages: [
+      {
         heading: "Module 1",
         route: "/dashboard",
         svgIcon: "media/icons/duotune/art/art002.svg",

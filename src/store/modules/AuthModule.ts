@@ -5,10 +5,9 @@ import { Module, Action, Mutation, VuexModule } from "vuex-module-decorators";
 
 export interface User {
   name: string;
-  surname: string;
-  email: string;
+  username: string;
   password: string;
-  token: string;
+  access_token: string;
 }
 
 export interface UserAuthInfo {
@@ -23,26 +22,14 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   user = {} as User;
   isAuthenticated = !!JwtService.getToken();
 
-  /**
-   * Get current user object
-   * @returns User
-   */
   get currentUser(): User {
     return this.user;
   }
 
-  /**
-   * Verify user authentication
-   * @returns boolean
-   */
   get isUserAuthenticated(): boolean {
     return this.isAuthenticated;
   }
 
-  /**
-   * Get authentification errors
-   * @returns array
-   */
   get getErrors(): Array<string> {
     return this.errors;
   }
@@ -55,9 +42,10 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   @Mutation
   [Mutations.SET_AUTH](user) {
     this.isAuthenticated = true;
-    this.user = user;
+    this.user = user.info;
     this.errors = [];
-    JwtService.saveToken(this.user.token);
+    JwtService.saveToken(user.access_token);
+    ApiService.setHeader();
   }
 
   @Mutation
@@ -81,13 +69,18 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   @Action
   [Actions.LOGIN](credentials) {
     return new Promise<void>((resolve, reject) => {
-      ApiService.post("login", credentials)
+      ApiService.post("auth/login", credentials)
         .then(({ data }) => {
-          this.context.commit(Mutations.SET_AUTH, data);
-          resolve();
+          if (data.access_token) {
+            this.context.commit(Mutations.SET_AUTH, data);
+            resolve();
+          } else {
+            this.context.commit(Mutations.SET_ERROR, data.message);
+            reject();
+          }
         })
         .catch(({ response }) => {
-          this.context.commit(Mutations.SET_ERROR, response.data.errors);
+          this.context.commit(Mutations.SET_ERROR, response.data);
           reject();
         });
     });
@@ -96,21 +89,6 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   @Action
   [Actions.LOGOUT]() {
     this.context.commit(Mutations.PURGE_AUTH);
-  }
-
-  @Action
-  [Actions.REGISTER](credentials) {
-    return new Promise<void>((resolve, reject) => {
-      ApiService.post("registration", credentials)
-        .then(({ data }) => {
-          this.context.commit(Mutations.SET_AUTH, data);
-          resolve();
-        })
-        .catch(({ response }) => {
-          this.context.commit(Mutations.SET_ERROR, response.data.errors);
-          reject();
-        });
-    });
   }
 
   @Action
@@ -132,9 +110,11 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   // [Actions.VERIFY_AUTH]() {
   //   if (JwtService.getToken()) {
   //     ApiService.setHeader();
-  //     ApiService.get("verify")
+  //     ApiService.get("auth/verify")
   //       .then(({ data }) => {
-  //         this.context.commit(Mutations.SET_AUTH, data);
+  //         if (!data.status) {
+  //           this.context.commit(Mutations.PURGE_AUTH);
+  //         }
   //       })
   //       .catch(({ response }) => {
   //         this.context.commit(Mutations.SET_ERROR, response.data.errors);
@@ -144,19 +124,19 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   //   }
   // }
 
-  @Action
-  [Actions.UPDATE_USER](payload) {
-    ApiService.setHeader();
-    return new Promise<void>((resolve, reject) => {
-      ApiService.post("update_user", payload)
-        .then(({ data }) => {
-          this.context.commit(Mutations.SET_USER, data);
-          resolve();
-        })
-        .catch(({ response }) => {
-          this.context.commit(Mutations.SET_ERROR, response.data.errors);
-          reject();
-        });
-    });
-  }
+  // @Action
+  // [Actions.UPDATE_USER](payload) {
+  //   ApiService.setHeader();
+  //   return new Promise<void>((resolve, reject) => {
+  //     ApiService.post("update_user", payload)
+  //       .then(({ data }) => {
+  //         this.context.commit(Mutations.SET_USER, data);
+  //         resolve();
+  //       })
+  //       .catch(({ response }) => {
+  //         this.context.commit(Mutations.SET_ERROR, response.data.errors);
+  //         reject();
+  //       });
+  //   });
+  // }
 }
