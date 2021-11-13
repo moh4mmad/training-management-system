@@ -13,7 +13,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_entity_info_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder">Add Info</h2>
+          <h2 class="fw-bolder">Edit Info</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -77,6 +77,82 @@
                       >{{ types.name }}</el-option
                     >
                   </el-select>
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Entity Name</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Entity Name"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="entity_name">
+                  <el-input v-model="formData.entity_name" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Entity Short Name</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Entity Short Name"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="entity_short_name">
+                  <el-input v-model="formData.entity_short_name" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Email</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Email"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="email">
+                  <el-input v-model="formData.email" />
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="fv-row mb-7">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Telephone</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Telephone"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="telephone">
+                  <el-input v-model="formData.telephone" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -262,12 +338,44 @@ export default defineComponent({
       sub_district: "",
       district: "",
       division: "",
+      email: "",
+      entity_name: "",
+      entity_short_name: "",
+      telephone: "",
     });
     const formRef = ref<null | HTMLFormElement>(null);
     const addModalRef = ref<null | HTMLElement>(null);
     const loading = ref<boolean>(false);
     const update = ref<boolean>(false);
     const rules = ref({
+      entity_name: [
+        {
+          required: true,
+          message: "Entity Name is required",
+          trigger: "change",
+        },
+      ],
+      entity_short_name: [
+        {
+          required: true,
+          message: "Entity Short Name is required",
+          trigger: "change",
+        },
+      ],
+      email: [
+        {
+          required: true,
+          message: "Email is required",
+          trigger: "change",
+        },
+      ],
+      telephone: [
+        {
+          required: true,
+          message: "Telephone is required",
+          trigger: "change",
+        },
+      ],
       registration_number: [
         {
           required: true,
@@ -328,6 +436,10 @@ export default defineComponent({
         sub_district: "",
         district: "",
         division: "",
+        entity_name: "",
+        entity_short_name: "",
+        email: "",
+        telephone: "",
       };
     });
 
