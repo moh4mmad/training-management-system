@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
 //import { Mutations, Actions } from "@/store/enums/StoreEnums";
 import { Mutations } from "@/store/enums/StoreEnums";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,6 +30,12 @@ const routes: Array<RouteRecordRaw> = [
         name: "entity list",
         component: () => import("@/views/Association/EntityList.vue"),
       },
+      {
+        path: "/entity-list/:id",
+        name: "single entity",
+        component: () => import("@/views/Association/SingleEntity.vue"),
+      },
+
       {
         path: "/new-entity",
         name: "new entity",
