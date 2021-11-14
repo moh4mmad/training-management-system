@@ -6,40 +6,77 @@
 
     <!--begin::Input group-->
     <!--begin::Input group-->
-    <div class="fv-row mb-10">
-      <!--end::Label-->
-      <label class="form-label required">Name</label>
-      <!--end::Label-->
-      <!--begin::Input-->
-      <Field
-        type="text"
-        name="name"
-        class="form-control form-control-lg form-control-solid"
-        rows="3"
-      ></Field>
-      <ErrorMessage
-        name="name"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-      <!--end::Input-->
+    <div class="row">
+      <div class="col-md-6">
+        <!--end::Label-->
+        <label class="form-label required">Name</label>
+        <!--end::Label-->
+        <!--begin::Input-->
+        <Field
+          v-model="employee.name"
+          type="text"
+          name="name"
+          class="form-control form-control-lg"
+          rows="3"
+        ></Field>
+        <ErrorMessage
+          name="name"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+        <!--end::Input-->
+      </div>
+      <div class="col-md-6">
+        <label class="form-label required">Designation</label>
+        <!--end::Label-->
+        <!--begin::Input-->
+        <Field
+          v-model="employee.designation"
+          name="designation"
+          class="form-control form-control-lg"
+        ></Field>
+        <ErrorMessage
+          name="designation"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
     </div>
-    <div class="fv-row mb-10">
-      <!--end::Label-->
-      <label class="form-label required">Designation</label>
-      <!--end::Label-->
-      <!--begin::Input-->
-      <Field
-        type="textarea"
-        name="designation"
-        class="form-control form-control-lg form-control-solid"
-        rows="3"
-      ></Field>
-      <ErrorMessage
-        name="designation"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-      <!--end::Input-->
+
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label required">Date of birth</label>
+
+        <el-form-item prop="date">
+          <el-date-picker
+            v-model="employee.dob"
+            value-format="YYYY-MM-DD"
+            format="DD-MM-YYYY"
+            type="date"
+            name="dob"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <ErrorMessage
+          name="dob"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+        <!--end::Input-->
+      </div>
+      <div class="col-md-6">
+        <label>
+          <span>National ID</span>
+        </label>
+        <!--end::Label-->
+
+        <!--begin::Input-->
+        <Field
+          v-model="employee.nid"
+          name="nid"
+          class="form-control form-control-lg"
+          value=""
+        />
+      </div>
     </div>
+
     <div class="fv-row mb-10">
       <!--end::Label-->
       <label class="form-label required">Date of Birth</label>
@@ -48,7 +85,7 @@
       <Field
         type="date"
         name="dob"
-        class="form-control form-control-lg form-control-solid"
+        class="form-control form-control-lg"
         rows="3"
       ></Field>
       <ErrorMessage
@@ -73,11 +110,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="nid"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
+      <Field name="nid" class="form-control form-control-lg" value="" />
       <!--end::Input-->
     </div>
     <div class="fv-row mb-10">
@@ -96,11 +129,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="fax"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
+      <Field name="fax" class="form-control form-control-lg" value="" />
       <!--end::Input-->
     </div>
     <div class="fv-row mb-0">
@@ -111,7 +140,7 @@
       <!--begin::Input-->
       <Field
         name="drivingLicense"
-        class="form-control form-control-lg form-control-solid"
+        class="form-control form-control-lg"
         value=""
       />
       <!--end::Input-->
@@ -132,11 +161,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="mobile"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
+      <Field name="mobile" class="form-control form-control-lg" value="" />
       <!--end::Input-->
       <ErrorMessage
         name="mobile"
@@ -161,7 +186,7 @@
       <!--begin::Input-->
       <Field
         name="employeeEmail"
-        class="form-control form-control-lg form-control-solid"
+        class="form-control form-control-lg"
         type="email"
       />
       <!--end::Input-->
@@ -178,7 +203,7 @@
       <!--begin::Input-->
       <Field
         name="gender"
-        class="form-select form-select-lg form-select-solid"
+        class="form-select form-select-lg"
         data-control="select2"
         data-placeholder="Select..."
         data-allow-clear="true"
@@ -204,7 +229,7 @@
       <!--begin::Input-->
       <Field
         name="religion"
-        class="form-select form-select-lg form-select-solid"
+        class="form-select form-select-lg"
         data-control="select2"
         data-placeholder="Select..."
         data-allow-clear="true"
@@ -231,10 +256,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="presentAddress"
-        class="form-control form-control-lg form-control-solid"
-      />
+      <Field name="presentAddress" class="form-control form-control-lg" />
       <!--end::Input-->
     </div>
     <div class="fv-row mb-10">
@@ -245,7 +267,7 @@
       <!--begin::Input-->
       <Field
         name="presentDistrict"
-        class="form-select form-select-lg form-select-solid"
+        class="form-select form-select-lg"
         data-control="select2"
         data-placeholder="Select..."
         data-allow-clear="true"
@@ -284,7 +306,7 @@
       <!--begin::Input-->
       <Field
         name="parmanentAddress"
-        class="form-control form-control-lg form-control-solid"
+        class="form-control form-control-lg"
         value=""
       />
       <!--end::Input-->
@@ -297,7 +319,7 @@
       <!--begin::Input-->
       <Field
         name="paramanentDistrict"
-        class="form-select form-select-lg form-select-solid"
+        class="form-select form-select-lg"
         data-control="select2"
         data-placeholder="Select..."
         data-allow-clear="true"
