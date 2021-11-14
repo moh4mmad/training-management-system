@@ -1,366 +1,636 @@
 <template>
-  <!--begin::Card-->
-  <div class="card">
-    <!--begin::Card body-->
-    <div class="card-body">
-      <!--begin::Stepper-->
+  <Form
+    @submit.prevent="formSubmit"
+    class="form"
+    :validation-schema="AssociationSchema"
+  >
+    <div class="card mb-5 mb-xl-10">
       <div
-        class="stepper stepper-links d-flex flex-column"
-        id="kt_create_account_stepper"
-        ref="horizontalWizardRef"
+        class="card-header border-0 cursor-pointer"
+        role="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#create_entity"
+        aria-expanded="true"
+        aria-controls="form"
       >
-        <!--begin::Nav-->
-        <div class="stepper-nav py-5 mt-5">
-          <!--begin::Step 1-->
-          <div class="stepper-item current" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Entity Info</h3>
-          </div>
-          <!--end::Step 1-->
-
-          <!--begin::Step 2-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Employee Info</h3>
-          </div>
-          <!--end::Step 2-->
-
-          <!--begin::Step 3-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Add Account</h3>
-          </div>
-          <!--end::Step 3-->
-
-          <!--begin::Step 4-->
-          <!-- <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Billing Details</h3>
-          </div> -->
-          <!--end::Step 4-->
-
-          <!--begin::Step 5-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Completed</h3>
-          </div>
-          <!--end::Step 5-->
+        <div class="card-title m-0">
+          <h3 class="fw-bolder m-0">Entity Information</h3>
         </div>
-        <!--end::Nav-->
-
-        <!--begin::Form-->
-        <form
-          class="mx-auto mw-600px w-100 pt-15 pb-10"
-          novalidate="novalidate"
-          id="kt_create_account_form"
-          @submit="handleStep"
-        >
-          <!--begin::Step 1-->
-          <div class="current" data-kt-stepper-element="content">
-            <Step1></Step1>
-          </div>
-          <!--end::Step 1-->
-
-          <!--begin::Step 2-->
-          <div data-kt-stepper-element="content">
-            <Step2></Step2>
-          </div>
-          <!--end::Step 2-->
-
-          <!--begin::Step 3-->
-          <div data-kt-stepper-element="content">
-            <Step3></Step3>
-          </div>
-          <!--end::Step 3-->
-
-          <!--begin::Step 4-->
-          <div data-kt-stepper-element="content">
-            <Step4></Step4>
-          </div>
-          <!--end::Step 4-->
-
-          <!--begin::Step 5-->
-          <div data-kt-stepper-element="content">
-            <Step5></Step5>
-          </div>
-          <!--end::Step 5-->
-
-          <!--begin::Actions-->
-          <div class="d-flex flex-stack pt-15">
-            <!--begin::Wrapper-->
-            <div class="mr-2">
-              <button
-                type="button"
-                class="btn btn-lg btn-light-primary me-3"
-                data-kt-stepper-action="previous"
-                @click="previousStep"
-              >
-                <span class="svg-icon svg-icon-4 me-1">
-                  <inline-svg src="media/icons/duotune/arrows/arr063.svg" />
-                </span>
-                Back
-              </button>
-            </div>
-            <!--end::Wrapper-->
-
-            <!--begin::Wrapper-->
-            <div>
-              <button
-                type="button"
-                class="btn btn-lg btn-primary me-3"
-                data-kt-stepper-action="submit"
-                v-if="currentStepIndex === totalSteps - 1"
-                @click="formSubmit()"
-              >
-                <span class="indicator-label">
-                  Submit
-                  <span class="svg-icon svg-icon-3 ms-2 me-0">
-                    <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
-                  </span>
-                </span>
-                <span class="indicator-progress">
-                  Please wait...
-                  <span
-                    class="spinner-border spinner-border-sm align-middle ms-2"
-                  ></span>
-                </span>
-              </button>
-
-              <button v-else type="submit" class="btn btn-lg btn-primary">
-                Continue
-                <span class="svg-icon svg-icon-4 ms-1 me-0">
-                  <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
-                </span>
-              </button>
-            </div>
-            <!--end::Wrapper-->
-          </div>
-          <!--end::Actions-->
-        </form>
-        <!--end::Form-->
       </div>
-      <!--end::Stepper-->
+
+      <div id="create_entity" class="collapse show">
+        <div class="collapse show">
+          <div class="card-body border-top p-9">
+            <div class="current" data-kt-stepper-element="content">
+              <div class="row">
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="form-label required">Entity Type</label><br />
+                  <!--end::Label-->
+
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Type"
+                    v-model="entity.entity_type_id"
+                    filterable
+                  >
+                    <el-option
+                      v-for="types in entityTypes"
+                      :key="types.id"
+                      :label="types.name"
+                      :value="types.id"
+                      >{{ types.name }}</el-option
+                    >
+                  </el-select>
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="entity_type_id"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+
+                <!--end::Input group-->
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="form-label">Parent</label> <br />
+                  <!--end::Label-->
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Parent"
+                    v-model="entity.parent_entity_id"
+                    filterable
+                  >
+                    <el-option
+                      v-for="info in entityInfos"
+                      :key="info.id"
+                      :label="info.entity_short_name"
+                      :value="info.id"
+                      >{{ info.entity_name }}</el-option
+                    >
+                  </el-select>
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="parent_entity_id"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="form-label required">Industry Sector</label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Parent"
+                    v-model="entity.industry_sector"
+                    filterable
+                  >
+                    <el-option
+                      v-for="indus in industry"
+                      :key="indus.id"
+                      :label="indus.sector_name"
+                      :value="indus.id"
+                      >{{ indus.sector_name }}</el-option
+                    >
+                  </el-select>
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="industry_sector"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-8">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Name</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    name="entity_name"
+                    class="form-control form-control-lg"
+                    v-model="entity.entity_name"
+                  />
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="entity_name"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Short Name</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.entity_short_name"
+                    name="entity_short_name"
+                    class="form-control form-control-lg"
+                  />
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="entity_short_name"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span>Registration Number</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.entity_short_name"
+                    name="registration_number"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span>Registration Date</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <el-form-item prop="date">
+                    <el-date-picker
+                      v-model="entity.registration_date"
+                      value-format="YYYY-MM-DD"
+                      format="DD-MM-YYYY"
+                      type="date"
+                    >
+                    </el-date-picker>
+                  </el-form-item>
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span>Registration Authority</span>
+                  </label>
+
+                  <Field
+                    v-model="entity.registration_authority"
+                    name="registration_authority"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-3">
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Telephone</span>
+                  </label>
+                  <Field
+                    v-model="entity.telephone"
+                    name="telephone"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                  <ErrorMessage
+                    name="telephone"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-3">
+                  <label class="d-flex align-items-center form-label">
+                    <span>Fax</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.fax"
+                    name="fax"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label class="fs-6 fw-bold form-label required">Email</label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.email"
+                    name="email"
+                    type="email"
+                    class="form-control form-control-lg"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-3">
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Web Url</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.web_url"
+                    name="web_url"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                  <ErrorMessage
+                    name="web_url"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label class="d-flex align-items-center form-label">
+                    <span>Address</span>
+                  </label>
+                  <Field
+                    v-model="entity.address"
+                    name="address"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-3">
+                  <label class="form-label">Division</label>
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Parent"
+                    v-model="entity.division"
+                    filterable
+                    @change="getDistrict()"
+                  >
+                    <el-option
+                      v-for="division in divisions"
+                      :key="division.id"
+                      :label="division.division_name_eng"
+                      :value="division.id"
+                      >{{ division.division_name_eng }}</el-option
+                    >
+                  </el-select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">District</label>
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Parent"
+                    v-model="entity.district"
+                    filterable
+                    @change="getSubDistrict()"
+                  >
+                    <el-option
+                      v-for="district in districts"
+                      :key="district.id"
+                      :label="district.district_name_eng"
+                      :value="district.id"
+                      >{{ district.district_name_eng }}</el-option
+                    >
+                  </el-select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Sub District</label>
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Parent"
+                    v-model="entity.sub_district"
+                    filterable
+                  >
+                    <el-option
+                      v-for="sub_district in subDistricts"
+                      :key="sub_district.id"
+                      :label="sub_district.upazila_name_eng"
+                      :value="sub_district.id"
+                      >{{ sub_district.upazila_name_eng }}</el-option
+                    >
+                  </el-select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Postcode</label>
+                  <Field
+                    v-model="entity.postcode"
+                    name="address"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label class="d-flex align-items-center form-label">
+                    <span>Description</span>
+                  </label>
+                  <textarea
+                    v-model="entity.entity_description"
+                    name="description"
+                    class="form-control form-control-lg"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label
+                    class="
+                      form-check form-switch form-check-custom form-check-solid
+                    "
+                  >
+                    <Field
+                      type="checkbox"
+                      class="form-check-input"
+                      name="active_status"
+                      v-model="entity.active_status"
+                      value="1"
+                    />
+                    <span class="form-check-label fw-bold"> Active </span>
+                  </label>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label class="form-label">Status Description</label>
+                  <Field
+                    v-model="entity.status_remarks"
+                    name="status_remarks"
+                    class="form-control form-control-lg"
+                  ></Field>
+                  <div class="form-text">
+                    Add description for inactive status. Leave empty for active
+                    entity.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!--end::Card body-->
-  </div>
-  <!--end::Card-->
+
+    <div class="card mb-5 mb-xl-10">
+      <div
+        class="card-header border-0 cursor-pointer"
+        role="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#employee_information"
+        aria-expanded="true"
+        aria-controls="form"
+      >
+        <div class="card-title m-0">
+          <h3 class="fw-bolder m-0">Employee Information</h3>
+        </div>
+      </div>
+      <div id="employee_information" class="collapse show">
+        <div class="collapse show">
+          <div class="card-body border-top p-9">
+            <div data-kt-stepper-element="content">
+              <Step2></Step2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-5 mb-xl-10">
+      <div
+        class="card-header border-0 cursor-pointer"
+        role="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#user_account"
+        aria-expanded="true"
+        aria-controls="form"
+      >
+        <div class="card-title m-0">
+          <h3 class="fw-bolder m-0">Add User Account</h3>
+        </div>
+      </div>
+
+      <div id="user_account" class="collapse show">
+        <div class="collapse show">
+          <div class="card-body border-top p-9">
+            <div data-kt-stepper-element="content">
+              <Step3></Step3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="d-flex">
+        <div>
+          <button
+            type="submit"
+            class="btn btn-lg btn-primary"
+            data-kt-stepper-action="submit"
+          >
+            <span class="indicator-label">
+              Submit
+              <span class="svg-icon svg-icon-3 ms-2 me-0">
+                <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
+              </span>
+            </span>
+            <span class="indicator-progress">
+              Please wait...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Form>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
-import { StepperComponent } from "@/assets/ts/components";
-import { useForm } from "vee-validate";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
+import { defineComponent } from "vue";
+import { Form, Field, ErrorMessage } from "vee-validate";
+//import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
-import Step1 from "@/components/association/wizard/steps/Entity.vue";
 import Step2 from "@/components/association/wizard/steps/Profile.vue";
 import Step3 from "@/components/association/wizard/steps/User.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-
-interface IStep1 {
-  entityType: string;
-  email: string;
-  telephone: string;
-  industrySector: string;
-  webUrl: string;
-  address: string;
-  parentType: string;
-  postcode: string;
-  division: string;
-  district: string;
-  subDistrict: string;
-  description: string;
-  status: string;
-  activeStatus: string;
-  fax: string;
-  name: string;
-  shortName: string;
-  regNumber: string;
-  regDate: string;
-  regAuthority: string;
-}
-
-interface IStep2 {
-  employeeName: string;
-  designation: string;
-  dob: string;
-  nationalID: string;
-  passport: string;
-  drivingLicense: string;
-  mobile: string;
-  gender: string;
-  religion: string;
-  employeeEmail: string;
-  presentAddress: string;
-  presentDistrict: string;
-  permanentAddress: string;
-  permanentDistrict: string;
-}
-
-interface IStep3 {
-  employeeEmail: string;
-  password: string;
-  confirmPassword: string;
-}
-interface CreateAccount extends IStep1, IStep2, IStep3 {}
+import ApiService from "@/core/services/ApiService";
 
 export default defineComponent({
   name: "kt-horizontal-wizard",
   components: {
-    Step1,
+    Form,
+    Field,
+    ErrorMessage,
     Step2,
     Step3,
   },
-  setup() {
-    const _stepperObj = ref<StepperComponent | null>(null);
-    const horizontalWizardRef = ref<HTMLElement | null>(null);
-    const currentStepIndex = ref(0);
-
-    const formData = ref<CreateAccount>({
-      entityType: "",
-      email: "",
-      telephone: "",
-      industrySector: "",
-      webUrl: "",
-      address: "",
-      parentType: "",
-      postcode: "",
-      division: "",
-      district: "",
-      subDistrict: "",
-      description: "",
-      status: "",
-      activeStatus: "",
-      fax: "",
-      name: "",
-      shortName: "",
-      regNumber: "",
-      regDate: "",
-      regAuthority: "",
-
-      employeeName: "",
-      designation: "",
-      dob: "",
-      nationalID: "",
-      passport: "",
-      drivingLicense: "",
-      mobile: "",
-      gender: "",
-      religion: "",
-      employeeEmail: "",
-      presentAddress: "",
-      presentDistrict: "",
-      permanentAddress: "",
-      permanentDistrict: "",
-
-      password: "",
-      confirmPassword: "",
-    });
-
-    onMounted(() => {
-      _stepperObj.value = StepperComponent.createInsance(
-        horizontalWizardRef.value as HTMLElement
-      );
-
-      setCurrentPageBreadcrumbs("Horizontal", ["Pages", "Wizards"]);
-    });
-
-    const createAccountSchema = [
-      Yup.object({
-        entityType: Yup.string().required().label("Entity Type"),
-        email: Yup.string()
-          .email("Must be valid email")
-          .required()
-          .label("Email"),
-        industrySector: Yup.string().required().label("Idustry Sector"),
-        webUrl: Yup.string().required().label("Web Url"),
-        telephone: Yup.string().required().label("Telephone"),
-        name: Yup.string().required().label("Name"),
-        shortName: Yup.string().required().label("Short Name"),
-      }),
-      Yup.object({
-        employeeEmail: Yup.string()
-          .email("Must be valid email")
-          .required()
-          .label("Email"),
-        presentDistrict: Yup.string().required().label("Present District"),
-        name: Yup.string().required().label("Name"),
-        designation: Yup.string().required().label("Designation"),
-        gender: Yup.string().required().label("Gender"),
-        mobile: Yup.string().required().min(11).label("Mobile"),
-        dob: Yup.string().required().label("Date of Birth"),
-      }),
-      Yup.object({
-        password: Yup.string().required().min(8).label("Password"),
-        confirmPassword: Yup.string()
-          .required()
-          .min(8)
-          .label("Confirmation Password"),
-      }),
-    ];
-
-    const currentSchema = computed(() => {
-      return createAccountSchema[currentStepIndex.value];
-    });
-    const { resetForm, handleSubmit } = useForm<IStep1 | IStep2 | IStep3>({
-      validationSchema: currentSchema,
-    });
-
-    const totalSteps = computed(() => {
-      if (!_stepperObj.value) {
-        return;
-      }
-
-      return _stepperObj.value.totatStepsNumber;
-    });
-
-    resetForm({
-      values: {
-        ...formData.value,
-      },
-    });
-
-    const handleStep = handleSubmit((values) => {
-      formData.value = {
-        ...formData.value,
-        ...values,
-      };
-
-      currentStepIndex.value++;
-
-      if (!_stepperObj.value) {
-        return;
-      }
-
-      _stepperObj.value.goNext();
-    });
-
-    const previousStep = () => {
-      if (!_stepperObj.value) {
-        return;
-      }
-
-      currentStepIndex.value--;
-
-      _stepperObj.value.goPrev();
-    };
-
-    const formSubmit = () => {
-      Swal.fire({
-        text: "All is cool! Now you submit this form",
-        icon: "success",
-        buttonsStyling: false,
-        confirmButtonText: "Ok, got it!",
-        customClass: {
-          confirmButton: "btn fw-bold btn-light-primary",
-        },
-      }).then(() => {
-        window.location.reload();
-      });
-    };
-
+  data() {
     return {
-      horizontalWizardRef,
-      previousStep,
-      handleStep,
-      formSubmit,
-      totalSteps,
-      currentStepIndex,
+      entity: {
+        entity_type_id: "",
+        email: "",
+        telephone: "",
+        industry_sector: "",
+        web_url: "",
+        address: "",
+        parent_entity_id: "",
+        postcode: "",
+        division: "",
+        district: "",
+        sub_district: "",
+        entity_description: "",
+        status: "",
+        active_status: "1",
+        status_remarks: "",
+        fax: "",
+        name: "",
+        entity_short_name: "",
+        registration_number: "",
+        registration_date: "",
+        registration_authority: "",
+      },
+      employee: {
+        employeeName: "",
+        designation: "",
+        dob: "",
+        nationalID: "",
+        passport: "",
+        drivingLicense: "",
+        mobile: "",
+        gender: "",
+        religion: "",
+        employeeEmail: "",
+        presentAddress: "",
+        presentDistrict: "",
+        permanentAddress: "",
+        permanentDistrict: "",
+      },
+      user: {
+        password: "",
+        confirmPassword: "",
+      },
+      entityTypes: [],
+      industry: [],
+      entityInfos: [],
+      divisions: [],
+      districts: [],
+      subDistricts: [],
+    };
+  },
+  async created() {
+    await this.getEntityTypes();
+    await this.getIndustry();
+    await this.getEntityInfos();
+    await this.getDivision();
+  },
+  methods: {
+    formSubmit() {
+      //alert("pl");
+    },
+    async getEntityInfos() {
+      await ApiService.get("entity/infos")
+        .then((response) => {
+          this.entityInfos = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getEntityTypes() {
+      await ApiService.get("entity/types")
+        .then((response) => {
+          this.entityTypes = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getIndustry() {
+      await ApiService.get("configurations/industry_sectors")
+        .then((response) => {
+          this.industry = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getDivision() {
+      await ApiService.get("geo/divisions")
+        .then((response) => {
+          this.divisions = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getDistrict() {
+      await ApiService.get("geo/districts?division=" + this.entity.division)
+        .then((response) => {
+          this.districts = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getSubDistrict() {
+      await ApiService.get(
+        "geo/upazilas?division=" +
+          this.entity.division +
+          "&district=" +
+          this.entity.district
+      )
+        .then((response) => {
+          this.subDistricts = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+  },
+  setup() {
+    const AssociationSchema = Yup.object().shape({
+      //entity_type_id: Yup.string().required().label("Entity Type"),
+      email: Yup.string()
+        .email("Must be valid email")
+        .required()
+        .label("Email"),
+      //industry_sector: Yup.string().required().label("Idustry Sector"),
+      web_url: Yup.string().required().label("Web Url"),
+      telephone: Yup.string().required().label("Telephone"),
+      entity_name: Yup.string().required().label("Name"),
+      entity_short_name: Yup.string().required().label("Short Name"),
+
+      employeeEmail: Yup.string()
+        .email("Must be valid email")
+        .required()
+        .label("Email"),
+      presentDistrict: Yup.string().required().label("Present District"),
+      name: Yup.string().required().label("Name"),
+      designation: Yup.string().required().label("Designation"),
+      gender: Yup.string().required().label("Gender"),
+      mobile: Yup.string().required().min(11).label("Mobile"),
+      dob: Yup.string().required().label("Date of Birth"),
+
+      password: Yup.string().required().min(8).label("Password"),
+      confirmPassword: Yup.string()
+        .required()
+        .min(8)
+        .label("Confirmation Password"),
+    });
+    return {
+      AssociationSchema,
     };
   },
 });

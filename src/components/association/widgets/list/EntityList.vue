@@ -38,10 +38,10 @@
           >
             <!--begin::Title-->
             <div class="flex-grow-1 my-lg-0 my-2 me-2">
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'single entity', params: { id: item.id } }"
                 class="text-gray-800 fw-bolder text-hover-primary fs-3"
-                >{{ item.entity_short_name }}</a
+                >{{ item.entity_short_name }}</router-link
               >
 
               <span class="fw-bold d-block pt-1"
@@ -52,29 +52,22 @@
                 ><i class="fa fa-phone-square" aria-hidden="true"></i>
                 {{ item.telephone }}</span
               >
-              <span
-                class="d fw-bold d-block pt-1"
-                v-if="item.active_status == 1"
-                >Active: Yes</span
+              <span class="d fw-bold d-block pt-1"
+                >Active: {{ item.active_status == 1 ? "Yes" : "No" }}</span
               >
-              <span class="fw-bold d-block pt-1" v-else>Active: No</span>
             </div>
             <!--end::Title-->
 
             <!--begin::Section-->
             <div class="d-flex align-items-center">
-              <button
+              <router-link
                 class="
                   btn btn-icon btn-bg-light btn-active-color-primary btn-sm
                   me-1
                 "
-              >
-                <router-link
-                  :to="{ name: 'single entity', params: { id: item.id } }"
-                  ><i class="fas fa-eye"></i
-                ></router-link>
-              </button>
-              <router-view></router-view>
+                :to="{ name: 'single entity', params: { id: item.id } }"
+                ><i class="fas fa-eye"></i
+              ></router-link>
 
               <button
                 @click="edit(item)"
@@ -89,7 +82,7 @@
               </button>
 
               <button
-                @click="Delete(infos.id)"
+                @click="Delete(item.id)"
                 class="
                   btn btn-icon btn-bg-light btn-active-color-primary btn-sm
                 "
@@ -111,7 +104,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import ApiService from "@/core/services/ApiService";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import EntityModal from "@/components/modals/forms/entity/EntityModal.vue";
@@ -124,38 +117,6 @@ export default defineComponent({
   props: {
     widgetClasses: String,
   },
-  setup() {
-    const list = ref([
-      {
-        image: "media/stock/600x400/img-17.jpg",
-        title: "Cup & Green",
-        desc: "Visually stunning",
-        rate: "4.2",
-      },
-      {
-        image: "media/stock/600x400/img-17.jpg",
-        title: "Pink Patterns",
-        desc: "Feminine all around",
-        rate: "5.0",
-      },
-      {
-        image: "media/stock/600x400/img-1.jpg",
-        title: "Abstract Art",
-        desc: "The will to capture readers",
-        rate: " 5.7",
-      },
-      {
-        image: "media/stock/600x400/img-9.jpg",
-        title: "Desserts platter",
-        desc: "Food trends & inspirations",
-        rate: "3.7",
-      },
-    ]);
-
-    return {
-      list,
-    };
-  },
   data() {
     return {
       lists: [],
@@ -165,13 +126,15 @@ export default defineComponent({
   },
   async created() {
     await this.getData();
+    this.emitter.on("infos-updated", async () => {
+      await this.getData();
+    });
   },
   methods: {
     async getData() {
       await ApiService.get("entity/infos")
         .then((response) => {
           this.lists = response.data;
-          console.log(response);
         })
         .catch(({ response }) => {
           console.log(response);
