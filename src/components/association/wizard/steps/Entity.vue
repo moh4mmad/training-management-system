@@ -5,230 +5,226 @@
     <!--end::Heading-->
 
     <!--begin::Input group-->
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="form-label required">Entity Type</label>
-      <!--end::Label-->
+    <div class="row">
+      <div class="col-md-4">
+        <!--begin::Label-->
+        <label class="form-label required">Entity Type</label>
+        <!--end::Label-->
 
-      <!--begin::Input-->
-      <Field
-        name="entityType"
-        class="form-select form-select-lg form-select-solid"
-        data-control="select2"
-        data-placeholder="Select..."
-        data-allow-clear="true"
-        data-hide-search="true"
-        as="select"
-      >
-        <option value="" selected disabled>Select Entity Type</option>
-        <option value="1">S Corporation</option>
-        <option value="1">C Corporation</option>
-        <option value="2">Sole Proprietorship</option>
-        <option value="3">Non-profit</option>
-        <option value="4">Limited Liability</option>
-        <option value="5">General Partnership</option>
-      </Field>
-      <!--end::Input-->
-      <ErrorMessage
-        name="entityType"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-    </div>
-    <!--end::Input group-->
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="form-label">Parent</label>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <Field
-        name="parentType"
-        class="form-select form-select-lg form-select-solid"
-        data-control="select2"
-        data-placeholder="Select..."
-        data-allow-clear="true"
-        data-hide-search="true"
-        as="select"
-      >
-        <option></option>
-        <option value="1">S Corporation</option>
-        <option value="1">C Corporation</option>
-        <option value="2">Sole Proprietorship</option>
-        <option value="3">Non-profit</option>
-        <option value="4">Limited Liability</option>
-        <option value="5">General Partnership</option>
-      </Field>
-      <!--end::Input-->
-      <ErrorMessage
-        name="parentType"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-    </div>
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="form-label required">Industry Sector</label>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <Field
-        name="industrySector"
-        class="form-select form-select-lg form-select-solid"
-        data-control="select2"
-        data-placeholder="Select..."
-        data-allow-clear="true"
-        data-hide-search="true"
-        as="select"
-      >
-        <option></option>
-        <option value="1">S Corporation</option>
-        <option value="1">C Corporation</option>
-        <option value="2">Sole Proprietorship</option>
-        <option value="3">Non-profit</option>
-        <option value="4">Limited Liability</option>
-        <option value="5">General Partnership</option>
-      </Field>
-      <!--end::Input-->
-      <ErrorMessage
-        name="industrySector"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-    </div>
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span class="required">Name</span>
-
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
+        <!--begin::Input-->
+        <Field
+          name="entityType"
+          class="form-select form-select-lg"
+          data-control="select2"
+          data-placeholder="Select..."
+          data-allow-clear="true"
+          data-hide-search="true"
+          as="select"
         >
-        </i>
-      </label>
-      <!--end::Label-->
+          <option value="" selected disabled>Select Entity Type</option>
+          <option value="1">S Corporation</option>
+          <option value="1">C Corporation</option>
+          <option value="2">Sole Proprietorship</option>
+          <option value="3">Non-profit</option>
+          <option value="4">Limited Liability</option>
+          <option value="5">General Partnership</option>
+        </Field>
+        <!--end::Input-->
+        <ErrorMessage
+          name="entityType"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
 
-      <!--begin::Input-->
-      <Field
-        name="name"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
-      <!--end::Input-->
-      <ErrorMessage
-        name="name"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-    </div>
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span class="required">Short Name</span>
+      <!--end::Input group-->
+      <div class="col-md-4">
+        <!--begin::Label-->
+        <label class="form-label">Parent</label>
+        <!--end::Label-->
 
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
+        <!--begin::Input-->
+        <Field
+          name="parentType"
+          class="form-select form-select-lg"
+          data-control="select2"
+          data-placeholder="Select..."
+          data-allow-clear="true"
+          data-hide-search="true"
+          as="select"
         >
-        </i>
-      </label>
-      <!--end::Label-->
+          <option></option>
+          <option value="1">S Corporation</option>
+          <option value="1">C Corporation</option>
+          <option value="2">Sole Proprietorship</option>
+          <option value="3">Non-profit</option>
+          <option value="4">Limited Liability</option>
+          <option value="5">General Partnership</option>
+        </Field>
+        <!--end::Input-->
+        <ErrorMessage
+          name="parentType"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
+      <div class="col-md-4">
+        <!--begin::Label-->
+        <label class="form-label required">Industry Sector</label>
+        <!--end::Label-->
 
-      <!--begin::Input-->
-      <Field
-        name="shortName"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
-      <!--end::Input-->
-      <ErrorMessage
-        name="shortName"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-    </div>
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span>Registration Number</span>
-
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
+        <!--begin::Input-->
+        <Field
+          name="industrySector"
+          class="form-select form-select-lg"
+          data-control="select2"
+          data-placeholder="Select..."
+          data-allow-clear="true"
+          data-hide-search="true"
+          as="select"
         >
-        </i>
-      </label>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <Field
-        name="regNumber"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
-      <!--end::Input-->
-      <ErrorMessage
-        name="regNumber"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
+          <option></option>
+          <option value="1">S Corporation</option>
+          <option value="1">C Corporation</option>
+          <option value="2">Sole Proprietorship</option>
+          <option value="3">Non-profit</option>
+          <option value="4">Limited Liability</option>
+          <option value="5">General Partnership</option>
+        </Field>
+        <!--end::Input-->
+        <ErrorMessage
+          name="industrySector"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
     </div>
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span>Registration Date</span>
+    <div class="row mt-3">
+      <div class="col-md-8">
+        <!--begin::Label-->
+        <label class="d-flex align-items-center form-label">
+          <span class="required">Name</span>
 
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
-        >
-        </i>
-      </label>
-      <!--end::Label-->
+          <i
+            class="fas fa-exclamation-circle ms-2 fs-7"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover"
+            data-bs-html="true"
+          >
+          </i>
+        </label>
+        <!--end::Label-->
 
-      <!--begin::Input-->
-      <Field
-        name="regDate"
-        type="date"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
-      <!--end::Input-->
-      <ErrorMessage
-        name="regDate"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
+        <!--begin::Input-->
+        <Field name="name" class="form-control form-control-lg" value="" />
+        <!--end::Input-->
+        <ErrorMessage
+          name="name"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
+      <div class="col-md-4">
+        <!--begin::Label-->
+        <label class="d-flex align-items-center form-label">
+          <span class="required">Short Name</span>
+
+          <i
+            class="fas fa-exclamation-circle ms-2 fs-7"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover"
+            data-bs-html="true"
+          >
+          </i>
+        </label>
+        <!--end::Label-->
+
+        <!--begin::Input-->
+        <Field name="shortName" class="form-control form-control-lg" value="" />
+        <!--end::Input-->
+        <ErrorMessage
+          name="shortName"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
     </div>
-    <div class="fv-row mb-10">
-      <!--begin::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span>Registration Authority</span>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <!--begin::Label-->
+        <label class="d-flex align-items-center form-label">
+          <span>Registration Number</span>
 
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
-        >
-        </i>
-      </label>
-      <!--end::Label-->
+          <i
+            class="fas fa-exclamation-circle ms-2 fs-7"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover"
+            data-bs-html="true"
+          >
+          </i>
+        </label>
+        <!--end::Label-->
 
-      <!--begin::Input-->
-      <Field
-        name="regAuthority"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
-      <!--end::Input-->
-      <ErrorMessage
-        name="regAuthority"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
+        <!--begin::Input-->
+        <Field name="regNumber" class="form-control form-control-lg" value="" />
+        <!--end::Input-->
+        <ErrorMessage
+          name="regNumber"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
+      <div class="col-md-4">
+        <!--begin::Label-->
+        <label class="d-flex align-items-center form-label">
+          <span>Registration Date</span>
+
+          <i
+            class="fas fa-exclamation-circle ms-2 fs-7"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover"
+            data-bs-html="true"
+          >
+          </i>
+        </label>
+        <!--end::Label-->
+
+        <!--begin::Input-->
+        <Field
+          name="regDate"
+          type="date"
+          class="form-control form-control-lg"
+          value=""
+        />
+        <!--end::Input-->
+        <ErrorMessage
+          name="regDate"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
+      <div class="col-md-4">
+        <!--begin::Label-->
+        <label class="d-flex align-items-center form-label">
+          <span>Registration Authority</span>
+
+          <i
+            class="fas fa-exclamation-circle ms-2 fs-7"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover"
+            data-bs-html="true"
+          >
+          </i>
+        </label>
+        <!--end::Label-->
+
+        <!--begin::Input-->
+        <Field
+          name="regAuthority"
+          class="form-control form-control-lg"
+          value=""
+        />
+        <!--end::Input-->
+        <ErrorMessage
+          name="regAuthority"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
     </div>
+
     <!--begin::Input group-->
     <div class="fv-row mb-10">
       <!--begin::Label-->
@@ -246,11 +242,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="telephone"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
+      <Field name="telephone" class="form-control form-control-lg" value="" />
       <!--end::Input-->
       <ErrorMessage
         name="telephone"
@@ -273,11 +265,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="fax"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
+      <Field name="fax" class="form-control form-control-lg" value="" />
       <!--end::Input-->
       <ErrorMessage
         name="businessDescriptor"
@@ -290,11 +278,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="email"
-        type="email"
-        class="form-control form-control-lg form-control-solid"
-      />
+      <Field name="email" type="email" class="form-control form-control-lg" />
       <!--end::Input-->
       <ErrorMessage
         name="email"
@@ -317,11 +301,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="webUrl"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
+      <Field name="webUrl" class="form-control form-control-lg" value="" />
       <!--end::Input-->
       <ErrorMessage
         name="webUrl"
@@ -344,11 +324,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <Field
-        name="address"
-        class="form-control form-control-lg form-control-solid"
-        value=""
-      />
+      <Field name="address" class="form-control form-control-lg" value="" />
       <!--end::Input-->
       <ErrorMessage
         name="address"
@@ -363,7 +339,7 @@
       <!--begin::Input-->
       <Field
         name="division"
-        class="form-select form-select-lg form-select-solid"
+        class="form-select form-select-lg"
         data-control="select2"
         data-placeholder="Select..."
         data-allow-clear="true"
@@ -386,7 +362,7 @@
       <!--begin::Input-->
       <Field
         name="district"
-        class="form-select form-select-lg form-select-solid"
+        class="form-select form-select-lg"
         data-control="select2"
         data-placeholder="Select..."
         data-allow-clear="true"
@@ -409,7 +385,7 @@
       <!--begin::Input-->
       <Field
         name="subDistrict"
-        class="form-select form-select-lg form-select-solid"
+        class="form-select form-select-lg"
         data-control="select2"
         data-placeholder="Select..."
         data-allow-clear="true"
@@ -432,7 +408,7 @@
       <Field
         type="text"
         name="postcode"
-        class="form-control form-control-lg form-control-solid"
+        class="form-control form-control-lg"
         rows="3"
       ></Field>
       <!--end::Input-->
@@ -445,7 +421,7 @@
       <Field
         type="textarea"
         name="description"
-        class="form-control form-control-lg form-control-solid"
+        class="form-control form-control-lg"
         rows="3"
       ></Field>
       <!--end::Input-->
@@ -462,7 +438,7 @@
       <Field
         type="textarea"
         name="status"
-        class="form-control form-control-lg form-control-solid"
+        class="form-control form-control-lg"
         rows="3"
       ></Field>
       <div class="form-text">
@@ -484,6 +460,9 @@ export default defineComponent({
   components: {
     Field,
     ErrorMessage,
+  },
+  props: {
+    data: Object,
   },
 });
 </script>

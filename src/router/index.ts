@@ -26,23 +26,23 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/layout/Association.vue"),
     children: [
       {
-        path: "/entity-list",
+        path: "entity-list",
         name: "entity list",
         component: () => import("@/views/Association/EntityList.vue"),
       },
       {
-        path: "/entity-list/:id",
+        path: "entity-list/:id",
         name: "single entity",
         component: () => import("@/views/Association/SingleEntity.vue"),
       },
 
       {
-        path: "/new-entity",
+        path: "new-entity",
         name: "new entity",
         component: () => import("@/views/Association/NewEntity.vue"),
       },
       {
-        path: "/association-contracts",
+        path: "association-contracts",
         name: "association contracts",
         component: () => import("@/views/Association/AssociationContracts.vue"),
       },

@@ -1,366 +1,1046 @@
 <template>
-  <!--begin::Card-->
-  <div class="card">
-    <!--begin::Card body-->
-    <div class="card-body">
-      <!--begin::Stepper-->
+  <Form
+    @submit="formSubmit()"
+    class="form"
+    :validation-schema="AssociationSchema"
+  >
+    <div class="card mb-5 mb-xl-10">
       <div
-        class="stepper stepper-links d-flex flex-column"
-        id="kt_create_account_stepper"
-        ref="horizontalWizardRef"
+        class="card-header border-0 cursor-pointer"
+        role="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#create_entity"
+        aria-expanded="true"
+        aria-controls="form"
       >
-        <!--begin::Nav-->
-        <div class="stepper-nav py-5 mt-5">
-          <!--begin::Step 1-->
-          <div class="stepper-item current" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Entity Info</h3>
-          </div>
-          <!--end::Step 1-->
-
-          <!--begin::Step 2-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Employee Info</h3>
-          </div>
-          <!--end::Step 2-->
-
-          <!--begin::Step 3-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Add Account</h3>
-          </div>
-          <!--end::Step 3-->
-
-          <!--begin::Step 4-->
-          <!-- <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Billing Details</h3>
-          </div> -->
-          <!--end::Step 4-->
-
-          <!--begin::Step 5-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <h3 class="stepper-title">Completed</h3>
-          </div>
-          <!--end::Step 5-->
+        <div class="card-title m-0">
+          <h3 class="fw-bolder m-0">Entity Information</h3>
         </div>
-        <!--end::Nav-->
-
-        <!--begin::Form-->
-        <form
-          class="mx-auto mw-600px w-100 pt-15 pb-10"
-          novalidate="novalidate"
-          id="kt_create_account_form"
-          @submit="handleStep"
-        >
-          <!--begin::Step 1-->
-          <div class="current" data-kt-stepper-element="content">
-            <Step1></Step1>
-          </div>
-          <!--end::Step 1-->
-
-          <!--begin::Step 2-->
-          <div data-kt-stepper-element="content">
-            <Step2></Step2>
-          </div>
-          <!--end::Step 2-->
-
-          <!--begin::Step 3-->
-          <div data-kt-stepper-element="content">
-            <Step3></Step3>
-          </div>
-          <!--end::Step 3-->
-
-          <!--begin::Step 4-->
-          <div data-kt-stepper-element="content">
-            <Step4></Step4>
-          </div>
-          <!--end::Step 4-->
-
-          <!--begin::Step 5-->
-          <div data-kt-stepper-element="content">
-            <Step5></Step5>
-          </div>
-          <!--end::Step 5-->
-
-          <!--begin::Actions-->
-          <div class="d-flex flex-stack pt-15">
-            <!--begin::Wrapper-->
-            <div class="mr-2">
-              <button
-                type="button"
-                class="btn btn-lg btn-light-primary me-3"
-                data-kt-stepper-action="previous"
-                @click="previousStep"
-              >
-                <span class="svg-icon svg-icon-4 me-1">
-                  <inline-svg src="media/icons/duotune/arrows/arr063.svg" />
-                </span>
-                Back
-              </button>
-            </div>
-            <!--end::Wrapper-->
-
-            <!--begin::Wrapper-->
-            <div>
-              <button
-                type="button"
-                class="btn btn-lg btn-primary me-3"
-                data-kt-stepper-action="submit"
-                v-if="currentStepIndex === totalSteps - 1"
-                @click="formSubmit()"
-              >
-                <span class="indicator-label">
-                  Submit
-                  <span class="svg-icon svg-icon-3 ms-2 me-0">
-                    <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
-                  </span>
-                </span>
-                <span class="indicator-progress">
-                  Please wait...
-                  <span
-                    class="spinner-border spinner-border-sm align-middle ms-2"
-                  ></span>
-                </span>
-              </button>
-
-              <button v-else type="submit" class="btn btn-lg btn-primary">
-                Continue
-                <span class="svg-icon svg-icon-4 ms-1 me-0">
-                  <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
-                </span>
-              </button>
-            </div>
-            <!--end::Wrapper-->
-          </div>
-          <!--end::Actions-->
-        </form>
-        <!--end::Form-->
       </div>
-      <!--end::Stepper-->
+
+      <div id="create_entity" class="collapse show">
+        <div class="collapse show">
+          <div class="card-body border-top p-9">
+            <div class="current" data-kt-stepper-element="content">
+              <div class="row">
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="form-label required">Entity Type</label><br />
+                  <!--end::Label-->
+
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Type"
+                    v-model="entity.entity_type_id"
+                    filterable
+                  >
+                    <el-option
+                      v-for="types in entityTypes"
+                      :key="types.id"
+                      :label="types.name"
+                      :value="types.id"
+                      >{{ types.name }}</el-option
+                    >
+                  </el-select>
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="entity_type_id"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+
+                <!--end::Input group-->
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="form-label">Parent</label> <br />
+                  <!--end::Label-->
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Entity Parent"
+                    v-model="entity.parent_entity_id"
+                    filterable
+                  >
+                    <el-option
+                      v-for="info in entityInfos"
+                      :key="info.id"
+                      :label="info.entity_short_name"
+                      :value="info.id"
+                      >{{ info.entity_name }}</el-option
+                    >
+                  </el-select>
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="parent_entity_id"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="form-label required">Industry Sector</label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Industry Sector"
+                    v-model="entity.industry_sector"
+                    filterable
+                  >
+                    <el-option
+                      v-for="indus in industry"
+                      :key="indus.id"
+                      :label="indus.sector_name"
+                      :value="indus.id"
+                      >{{ indus.sector_name }}</el-option
+                    >
+                  </el-select>
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="industry_sector"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-8">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Name</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    name="entity_name"
+                    class="form-control form-control-lg"
+                    v-model="entity.entity_name"
+                  />
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="entity_name"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Short Name</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.entity_short_name"
+                    name="entity_short_name"
+                    class="form-control form-control-lg"
+                  />
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="entity_short_name"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label required">
+                    <span>Registration Number</span>
+                  </label>
+
+                  <Field
+                    v-model="entity.registration_number"
+                    name="registration_number"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                  <ErrorMessage
+                    name="registration_number"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label">
+                    <span>Registration Date</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <el-form-item prop="date">
+                    <el-date-picker
+                      v-model="entity.registration_date"
+                      value-format="YYYY-MM-DD"
+                      format="DD-MM-YYYY"
+                      type="date"
+                    >
+                    </el-date-picker>
+                  </el-form-item>
+                </div>
+                <div class="col-md-4">
+                  <!--begin::Label-->
+                  <label class="d-flex align-items-center form-label required">
+                    <span>Registration Authority</span>
+                  </label>
+
+                  <Field
+                    v-model="entity.registration_authority"
+                    name="registration_authority"
+                    class="form-control form-control-lg"
+                  />
+                  <ErrorMessage
+                    name="registration_authority"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-3">
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Telephone</span>
+                  </label>
+                  <Field
+                    v-model="entity.telephone"
+                    name="telephone"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                  <ErrorMessage
+                    name="telephone"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-3">
+                  <label class="d-flex align-items-center form-label">
+                    <span>Fax</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.fax"
+                    name="fax"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label class="fs-6 fw-bold form-label required">Email</label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.email"
+                    name="email"
+                    type="email"
+                    class="form-control form-control-lg"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-3">
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Web Url</span>
+                  </label>
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    v-model="entity.web_url"
+                    name="web_url"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                  <ErrorMessage
+                    name="web_url"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label class="d-flex align-items-center form-label">
+                    <span>Address</span>
+                  </label>
+                  <Field
+                    v-model="entity.address"
+                    name="address"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-3">
+                  <label class="form-label required">Division</label>
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Division"
+                    v-model="entity.division"
+                    filterable
+                    @change="getDistrict()"
+                  >
+                    <el-option
+                      v-for="division in divisions"
+                      :key="division.id"
+                      :label="division.division_name_eng"
+                      :value="division.id"
+                      >{{ division.division_name_eng }}</el-option
+                    >
+                  </el-select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label required">District</label>
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select District"
+                    v-model="entity.district"
+                    filterable
+                    @change="getSubDistrict()"
+                  >
+                    <el-option
+                      v-for="district in districts"
+                      :key="district.id"
+                      :label="district.district_name_eng"
+                      :value="district.id"
+                      >{{ district.district_name_eng }}</el-option
+                    >
+                  </el-select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label required">Sub District</label>
+                  <el-select
+                    class="form-select-solid"
+                    placeholder="Select Sub District"
+                    v-model="entity.sub_district"
+                    filterable
+                  >
+                    <el-option
+                      v-for="sub_district in subDistricts"
+                      :key="sub_district.id"
+                      :label="sub_district.upazila_name_eng"
+                      :value="sub_district.id"
+                      >{{ sub_district.upazila_name_eng }}</el-option
+                    >
+                  </el-select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Postcode</label>
+                  <Field
+                    v-model="entity.postcode"
+                    name="postcode"
+                    class="form-control form-control-lg"
+                    value=""
+                  />
+                  <ErrorMessage
+                    name="postcode"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label class="d-flex align-items-center form-label">
+                    <span>Description</span>
+                  </label>
+                  <textarea
+                    v-model="entity.entity_description"
+                    name="description"
+                    class="form-control form-control-lg"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label
+                    class="
+                      form-check form-switch form-check-custom form-check-solid
+                    "
+                  >
+                    <Field
+                      type="checkbox"
+                      class="form-check-input"
+                      name="active_status"
+                      v-model="entity.active_status"
+                      value="1"
+                    />
+                    <span class="form-check-label fw-bold"> Active </span>
+                  </label>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label class="form-label">Status Description</label>
+                  <Field
+                    v-model="entity.status_remarks"
+                    name="status_remarks"
+                    class="form-control form-control-lg"
+                  ></Field>
+                  <div class="form-text">
+                    Add description for inactive status. Leave empty for active
+                    entity.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!--end::Card body-->
-  </div>
-  <!--end::Card-->
+
+    <div class="card mb-5 mb-xl-10">
+      <div
+        class="card-header border-0 cursor-pointer"
+        role="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#employee_information"
+        aria-expanded="true"
+        aria-controls="form"
+      >
+        <div class="card-title m-0">
+          <h3 class="fw-bolder m-0">Employee Information</h3>
+        </div>
+      </div>
+      <div id="employee_information" class="collapse show">
+        <div class="collapse show">
+          <div class="card-body border-top p-9">
+            <div class="row">
+              <div class="col-md-6">
+                <label class="form-label required">Name</label>
+                <Field
+                  v-model="employee.name"
+                  type="text"
+                  name="name"
+                  class="form-control form-control-lg"
+                  rows="3"
+                ></Field>
+                <ErrorMessage
+                  name="name"
+                  class="fv-plugins-message-container invalid-feedback"
+                ></ErrorMessage>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label required">Designation</label>
+                <Field
+                  v-model="employee.designation"
+                  name="designation"
+                  class="form-control form-control-lg"
+                ></Field>
+                <ErrorMessage
+                  name="designation"
+                  class="fv-plugins-message-container invalid-feedback"
+                ></ErrorMessage>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <label class="form-label required">Date of birth</label>
+
+                <el-form-item prop="date">
+                  <el-date-picker
+                    v-model="employee.dob"
+                    value-format="YYYY-MM-DD"
+                    format="DD-MM-YYYY"
+                    type="date"
+                    name="dob"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">
+                  <span>National ID</span>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <Field
+                  v-model="employee.nid"
+                  name="nid"
+                  class="form-control form-control-lg"
+                  value=""
+                />
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <label>
+                  <span>Passport</span>
+                </label>
+                <Field
+                  v-model="employee.passport"
+                  name="passport"
+                  class="form-control form-control-lg"
+                  value=""
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">
+                  <span>Driving License</span>
+                </label>
+                <Field
+                  v-model="employee.driving_license"
+                  name="driving_license"
+                  class="form-control form-control-lg"
+                  value=""
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label required"><span>Mobile</span></label>
+                <Field
+                  v-model="employee.mobile"
+                  name="mobile"
+                  class="form-control form-control-lg"
+                  value=""
+                />
+                <ErrorMessage
+                  name="mobile"
+                  class="fv-plugins-message-container invalid-feedback"
+                ></ErrorMessage>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <label class="form-label required">
+                  <span>Email</span>
+                </label>
+                <Field
+                  v-model="employee.email"
+                  name="employeeEmail"
+                  class="form-control form-control-lg"
+                  value=""
+                />
+                <ErrorMessage
+                  name="employeeEmail"
+                  class="fv-plugins-message-container invalid-feedback"
+                ></ErrorMessage>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label required">
+                  <span>Gender</span>
+                </label>
+                <Field
+                  name="gender"
+                  v-model="employee.gender"
+                  class="form-select form-select-lg"
+                  data-control="select2"
+                  data-placeholder="Select..."
+                  data-allow-clear="true"
+                  data-hide-search="true"
+                  as="select"
+                >
+                  <option value="" disabled selected>Select gender</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="O">Other</option>
+                </Field>
+                <!--end::Input-->
+                <ErrorMessage
+                  name="gender"
+                  class="fv-plugins-message-container invalid-feedback"
+                ></ErrorMessage>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><span>Religion</span></label>
+                <Field
+                  v-model="employee.religion"
+                  name="religion"
+                  class="form-control form-control-lg"
+                  value=""
+                />
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-8">
+                <label class="d-flex align-items-center form-label">
+                  <span>Present Address</span>
+                </label>
+                <Field
+                  v-model="employee.present_address"
+                  name="present_address"
+                  class="form-control form-control-lg"
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="d-flex align-items-center form-label required">
+                  <span>Present District</span>
+                </label>
+                <el-select
+                  class="form-select-solid"
+                  placeholder="Select Present District"
+                  v-model="employee.present_district"
+                  filterable
+                >
+                  <el-option
+                    v-for="district in empDistricts"
+                    :key="district.id"
+                    :label="district.district_name_eng"
+                    :value="district.id"
+                    >{{ district.district_name_eng }}</el-option
+                  >
+                </el-select>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-8">
+                <label class="d-flex align-items-center form-label">
+                  <span>Permanent Address</span>
+                </label>
+                <Field
+                  v-model="employee.permanent_address"
+                  name="permanent_address"
+                  class="form-control form-control-lg"
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="d-flex align-items-center form-label">
+                  <span>Permanent District</span>
+                </label>
+                <el-select
+                  class="form-select-solid"
+                  placeholder="Select Permanent District"
+                  v-model="employee.permanent_district"
+                  name="permanent_district"
+                  filterable
+                >
+                  <el-option
+                    v-for="district in empDistricts"
+                    :key="district.id"
+                    :label="district.district_name_eng"
+                    :value="district.id"
+                    >{{ district.district_name_eng }}</el-option
+                  >
+                </el-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-5 mb-xl-10">
+      <div
+        class="card-header border-0 cursor-pointer"
+        role="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#user_account"
+        aria-expanded="true"
+        aria-controls="form"
+      >
+        <div class="card-title m-0">
+          <h3 class="fw-bolder m-0">Add User Account</h3>
+        </div>
+      </div>
+
+      <div id="user_account" class="collapse show">
+        <div class="collapse show">
+          <div class="card-body border-top p-9">
+            <div data-kt-stepper-element="content">
+              <div class="row">
+                <div class="col-md-12">
+                  <label class="fs-6 fw-bold form-label required">Email</label>
+                  <Field
+                    v-model="employee.email"
+                    name="userEmail"
+                    class="form-control form-control-lg"
+                    type="email"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label
+                    class="
+                      form-check form-switch form-check-custom form-check-solid
+                    "
+                  >
+                    <Field
+                      type="checkbox"
+                      class="form-check-input"
+                      name="active_status"
+                      v-model="user.active_status"
+                      value="1"
+                    />
+                    <span class="form-check-label fw-bold"> Active </span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Password</span>
+                  </label>
+                  <Field
+                    v-model="user.password"
+                    name="password"
+                    class="form-control form-control-lg"
+                    type="password"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="col-md-6">
+                  <label class="d-flex align-items-center form-label">
+                    <span class="required">Confirm Password</span>
+                  </label>
+                  <Field
+                    v-model="user.password_confirmation"
+                    name="confirmPassword"
+                    class="form-control form-control-lg"
+                    type="password"
+                  />
+                  <ErrorMessage
+                    name="confirmPassword"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="d-flex">
+        <div>
+          <button
+            :data-kt-indicator="loading ? 'on' : null"
+            class="btn btn-lg btn-primary"
+            type="submit"
+            @click="formSubmit()"
+          >
+            <span v-if="!loading" class="indicator-label">
+              Submit
+              <span class="svg-icon svg-icon-3 ms-2 me-0">
+                <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
+              </span>
+            </span>
+            <span v-if="loading" class="indicator-progress">
+              Please wait...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Form>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
-import { StepperComponent } from "@/assets/ts/components";
-import { useForm } from "vee-validate";
+import { defineComponent } from "vue";
+import { Form, Field, ErrorMessage } from "vee-validate";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
-import Step1 from "@/components/association/wizard/steps/Entity.vue";
-import Step2 from "@/components/association/wizard/steps/Profile.vue";
-import Step3 from "@/components/association/wizard/steps/User.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-
-interface IStep1 {
-  entityType: string;
-  email: string;
-  telephone: string;
-  industrySector: string;
-  webUrl: string;
-  address: string;
-  parentType: string;
-  postcode: string;
-  division: string;
-  district: string;
-  subDistrict: string;
-  description: string;
-  status: string;
-  activeStatus: string;
-  fax: string;
-  name: string;
-  shortName: string;
-  regNumber: string;
-  regDate: string;
-  regAuthority: string;
-}
-
-interface IStep2 {
-  employeeName: string;
-  designation: string;
-  dob: string;
-  nationalID: string;
-  passport: string;
-  drivingLicense: string;
-  mobile: string;
-  gender: string;
-  religion: string;
-  employeeEmail: string;
-  presentAddress: string;
-  presentDistrict: string;
-  permanentAddress: string;
-  permanentDistrict: string;
-}
-
-interface IStep3 {
-  employeeEmail: string;
-  password: string;
-  confirmPassword: string;
-}
-interface CreateAccount extends IStep1, IStep2, IStep3 {}
+import ApiService from "@/core/services/ApiService";
 
 export default defineComponent({
   name: "kt-horizontal-wizard",
   components: {
-    Step1,
-    Step2,
-    Step3,
+    Form,
+    Field,
+    ErrorMessage,
+  },
+  data() {
+    return {
+      entity: {
+        entity_type_id: "",
+        email: "",
+        telephone: "",
+        industry_sector: "",
+        web_url: "",
+        address: "",
+        parent_entity_id: "",
+        postcode: "",
+        division: "",
+        district: "",
+        sub_district: "",
+        entity_description: "",
+        status: "",
+        active_status: "1",
+        status_remarks: "",
+        fax: "",
+        name: "",
+        entity_short_name: "",
+        registration_number: "",
+        registration_date: "",
+        registration_authority: "",
+      },
+      employee: {
+        name: "",
+        designation: "",
+        dob: "",
+        nid: "",
+        passport: "",
+        driving_license: "",
+        mobile: "",
+        email: "",
+        gender: "",
+        religion: "",
+        present_address: "",
+        present_district: "",
+        permanent_address: "",
+        permanent_district: "",
+      },
+      user: {
+        password: "",
+        password_confirmation: "",
+        active_status: "1",
+      },
+      entityTypes: [],
+      industry: [],
+      entityInfos: [],
+      divisions: [],
+      districts: [],
+      subDistricts: [],
+      empDistricts: [],
+      loading: false,
+    };
+  },
+  async created() {
+    await this.getEntityTypes();
+    await this.getIndustry();
+    await this.getEntityInfos();
+    await this.getDivision();
+    await this.getDistrictForEmp();
+  },
+  methods: {
+    async formSubmit() {
+      //let data = new FormData();
+      let entity = {};
+      Object.keys(this.entity).forEach((key) => {
+        if (this.entity[key] != "") entity[key] = this.entity[key];
+      });
+      let employee = {};
+      Object.keys(this.employee).forEach((key) => {
+        if (this.employee[key] != "") employee[key] = this.employee[key];
+      });
+      let user = {};
+      Object.keys(this.user).forEach((key) => {
+        if (this.user[key] != "") user[key] = this.user[key];
+      });
+
+      let data = {
+        entity: entity,
+        employee: employee,
+        user: user,
+      };
+      this.loading = true;
+      await ApiService.post("associatioin/new", data)
+        .then((response) => {
+          this.loading = false;
+          if (response.status == 200) {
+            Swal.fire({
+              text: response.data.message,
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok",
+              customClass: {
+                confirmButton: "btn btn-primary",
+              },
+            }).then(() => {
+              this.entity = {
+                entity_type_id: "",
+                email: "",
+                telephone: "",
+                industry_sector: "",
+                web_url: "",
+                address: "",
+                parent_entity_id: "",
+                postcode: "",
+                division: "",
+                district: "",
+                sub_district: "",
+                entity_description: "",
+                status: "",
+                active_status: "1",
+                status_remarks: "",
+                fax: "",
+                name: "",
+                entity_short_name: "",
+                registration_number: "",
+                registration_date: "",
+                registration_authority: "",
+              };
+              this.employee = {
+                name: "",
+                designation: "",
+                dob: "",
+                nid: "",
+                passport: "",
+                driving_license: "",
+                mobile: "",
+                email: "",
+                gender: "",
+                religion: "",
+                present_address: "",
+                present_district: "",
+                permanent_address: "",
+                permanent_district: "",
+              };
+              this.user = {
+                password: "",
+                password_confirmation: "",
+                active_status: "1",
+              };
+            });
+          } else {
+            let err = "";
+            for (const field of Object.keys(response.data.errors)) {
+              err += response.data.errors[field][0] + "<br>";
+            }
+            Swal.fire({
+              title: "Please check all the required field",
+              html: err,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Close",
+              customClass: {
+                confirmButton: "btn btn-danger",
+              },
+            });
+          }
+        })
+        .catch(({ response }) => {
+          this.loading = false;
+          Swal.fire({
+            title: "Unknown error",
+            html: response.data.error,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Close",
+            customClass: {
+              confirmButton: "btn btn-danger",
+            },
+          });
+          console.log(response);
+        });
+    },
+    async getEntityInfos() {
+      await ApiService.get("entity/infos")
+        .then((response) => {
+          this.entityInfos = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getEntityTypes() {
+      await ApiService.get("entity/types")
+        .then((response) => {
+          this.entityTypes = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getIndustry() {
+      await ApiService.get("configurations/industry_sectors")
+        .then((response) => {
+          this.industry = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getDivision() {
+      await ApiService.get("geo/divisions")
+        .then((response) => {
+          this.divisions = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getDistrict() {
+      await ApiService.get("geo/districts?division=" + this.entity.division)
+        .then((response) => {
+          this.districts = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getDistrictForEmp() {
+      await ApiService.get("geo/districts")
+        .then((response) => {
+          this.empDistricts = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async getSubDistrict() {
+      await ApiService.get(
+        "geo/upazilas?division=" +
+          this.entity.division +
+          "&district=" +
+          this.entity.district
+      )
+        .then((response) => {
+          this.subDistricts = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
   },
   setup() {
-    const _stepperObj = ref<StepperComponent | null>(null);
-    const horizontalWizardRef = ref<HTMLElement | null>(null);
-    const currentStepIndex = ref(0);
+    const AssociationSchema = Yup.object().shape({
+      email: Yup.string()
+        .email("Must be valid email")
+        .required()
+        .label("Email"),
+      web_url: Yup.string().required().label("Web Url"),
+      postcode: Yup.string().required().max(4).label("Postcode"),
+      registration_number: Yup.string().required().label("Registration Number"),
+      registration_authority: Yup.string()
+        .required()
+        .label("Registration Authority"),
+      telephone: Yup.number().required().min(11).label("Telephone"),
+      entity_name: Yup.string().required().label("Name"),
+      entity_short_name: Yup.string().required().label("Short Name"),
 
-    const formData = ref<CreateAccount>({
-      entityType: "",
-      email: "",
-      telephone: "",
-      industrySector: "",
-      webUrl: "",
-      address: "",
-      parentType: "",
-      postcode: "",
-      division: "",
-      district: "",
-      subDistrict: "",
-      description: "",
-      status: "",
-      activeStatus: "",
-      fax: "",
-      name: "",
-      shortName: "",
-      regNumber: "",
-      regDate: "",
-      regAuthority: "",
+      employeeEmail: Yup.string()
+        .email("Must be valid email")
+        .required()
+        .label("Email"),
+      //presentDistrict: Yup.string().required().label("Present District"),
+      name: Yup.string().required().label("Name"),
+      designation: Yup.string().required().label("Designation"),
+      gender: Yup.string().required().label("Gender"),
+      mobile: Yup.number().required().min(11).label("Mobile"),
+      dob: Yup.string().required().label("Date of Birth"),
 
-      employeeName: "",
-      designation: "",
-      dob: "",
-      nationalID: "",
-      passport: "",
-      drivingLicense: "",
-      mobile: "",
-      gender: "",
-      religion: "",
-      employeeEmail: "",
-      presentAddress: "",
-      presentDistrict: "",
-      permanentAddress: "",
-      permanentDistrict: "",
-
-      password: "",
-      confirmPassword: "",
+      password: Yup.string()
+        .required()
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/,
+          "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+        )
+        .label("Password"),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Password didn't match!")
+        .label("Confirm Password"),
     });
-
-    onMounted(() => {
-      _stepperObj.value = StepperComponent.createInsance(
-        horizontalWizardRef.value as HTMLElement
-      );
-
-      setCurrentPageBreadcrumbs("Horizontal", ["Pages", "Wizards"]);
-    });
-
-    const createAccountSchema = [
-      Yup.object({
-        entityType: Yup.string().required().label("Entity Type"),
-        email: Yup.string()
-          .email("Must be valid email")
-          .required()
-          .label("Email"),
-        industrySector: Yup.string().required().label("Idustry Sector"),
-        webUrl: Yup.string().required().label("Web Url"),
-        telephone: Yup.string().required().label("Telephone"),
-        name: Yup.string().required().label("Name"),
-        shortName: Yup.string().required().label("Short Name"),
-      }),
-      Yup.object({
-        employeeEmail: Yup.string()
-          .email("Must be valid email")
-          .required()
-          .label("Email"),
-        presentDistrict: Yup.string().required().label("Present District"),
-        name: Yup.string().required().label("Name"),
-        designation: Yup.string().required().label("Designation"),
-        gender: Yup.string().required().label("Gender"),
-        mobile: Yup.string().required().min(11).label("Mobile"),
-        dob: Yup.string().required().label("Date of Birth"),
-      }),
-      Yup.object({
-        password: Yup.string().required().min(8).label("Password"),
-        confirmPassword: Yup.string()
-          .required()
-          .min(8)
-          .label("Confirmation Password"),
-      }),
-    ];
-
-    const currentSchema = computed(() => {
-      return createAccountSchema[currentStepIndex.value];
-    });
-    const { resetForm, handleSubmit } = useForm<IStep1 | IStep2 | IStep3>({
-      validationSchema: currentSchema,
-    });
-
-    const totalSteps = computed(() => {
-      if (!_stepperObj.value) {
-        return;
-      }
-
-      return _stepperObj.value.totatStepsNumber;
-    });
-
-    resetForm({
-      values: {
-        ...formData.value,
-      },
-    });
-
-    const handleStep = handleSubmit((values) => {
-      formData.value = {
-        ...formData.value,
-        ...values,
-      };
-
-      currentStepIndex.value++;
-
-      if (!_stepperObj.value) {
-        return;
-      }
-
-      _stepperObj.value.goNext();
-    });
-
-    const previousStep = () => {
-      if (!_stepperObj.value) {
-        return;
-      }
-
-      currentStepIndex.value--;
-
-      _stepperObj.value.goPrev();
-    };
-
-    const formSubmit = () => {
-      Swal.fire({
-        text: "All is cool! Now you submit this form",
-        icon: "success",
-        buttonsStyling: false,
-        confirmButtonText: "Ok, got it!",
-        customClass: {
-          confirmButton: "btn fw-bold btn-light-primary",
-        },
-      }).then(() => {
-        window.location.reload();
-      });
-    };
-
     return {
-      horizontalWizardRef,
-      previousStep,
-      handleStep,
-      formSubmit,
-      totalSteps,
-      currentStepIndex,
+      AssociationSchema,
     };
   },
 });

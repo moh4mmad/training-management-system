@@ -12,21 +12,9 @@
               position-relative
             "
           >
-            <img src="media/big-building.png" alt="image" />
-            <div
-              class="
-                position-absolute
-                translate-middle
-                bottom-0
-                start-100
-                mb-6
-                bg-success
-                rounded-circle
-                border border-4 border-white
-                h-20px
-                w-20px
-              "
-            ></div>
+            <span class="fw-bold d-block pt-1"
+              ><i class="fa fa-university fa-4x" aria-hidden="true"></i
+            ></span>
           </div>
         </div>
         <!--end::Pic-->
@@ -47,25 +35,33 @@
             <div class="d-flex flex-column">
               <!--begin::Name-->
               <div class="d-flex align-items-center mb-2">
-                <a
-                  href="#"
-                  class="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                <a class="text-gray-800 text-hover-primary fs-3 fw-bolder me-1"
                   >{{ entityInfos.entity_name }}({{
                     entityInfos.entity_short_name
                   }})</a
                 >
-                <a href="#">
-                  <span class="svg-icon svg-icon-1 svg-icon-primary">
-                    <inline-svg src="media/icons/duotune/general/gen026.svg" />
-                  </span>
-                </a>
               </div>
               <!--end::Name-->
 
               <!--begin::Info-->
-              <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
-                <a
-                  href="#"
+              <div class="d-flex flex-wrap fw-bold fs-6">
+                <div
+                  class="
+                    d-flex
+                    align-items-center
+                    text-gray-400 text-hover-primary
+                    me-5
+                    mb-2
+                  "
+                >
+                  <span class="svg-icon svg-icon-4 me-1">
+                    <inline-svg src="media/icons/duotune/general/gen018.svg" />
+                  </span>
+                  {{ entityInfos.address }}
+                </div>
+              </div>
+              <div class="d-flex flex-wrap fw-bold fs-6">
+                <div
                   class="
                     d-flex
                     align-items-center
@@ -80,24 +76,10 @@
                     />
                   </span>
                   {{ entityInfos.telephone }}
-                </a>
-                <a
-                  href="#"
-                  class="
-                    d-flex
-                    align-items-center
-                    text-gray-400 text-hover-primary
-                    me-5
-                    mb-2
-                  "
-                >
-                  <span class="svg-icon svg-icon-4 me-1">
-                    <inline-svg src="media/icons/duotune/general/gen018.svg" />
-                  </span>
-                  {{ entityInfos.address }}
-                </a>
-                <a
-                  href="#"
+                </div>
+              </div>
+              <div class="d-flex flex-wrap fw-bold fs-6">
+                <div
                   class="
                     d-flex
                     align-items-center
@@ -111,8 +93,43 @@
                     />
                   </span>
                   {{ entityInfos.email }}
-                </a>
+                </div>
               </div>
+              <div class="d-flex flex-wrap fw-bold fs-6">
+                <div
+                  class="
+                    d-flex
+                    align-items-center
+                    text-gray-400 text-hover-primary
+                    mb-2
+                  "
+                >
+                  <span class="svg-icon svg-icon-4 me-1">
+                    <inline-svg
+                      src="media/icons/duotune/communication/com008.svg"
+                    />
+                  </span>
+                  {{ entityInfos.web_url }}
+                </div>
+              </div>
+              <div class="d-flex flex-wrap fw-bold fs-6">
+                <div
+                  class="
+                    d-flex
+                    align-items-center
+                    text-gray-400 text-hover-primary
+                    mb-2
+                  "
+                >
+                  <span class="svg-icon svg-icon-4 me-1">
+                    <inline-svg
+                      src="media/icons/duotune/communication/com009.svg"
+                    />
+                  </span>
+                  Active: {{ entityInfos.active_status == 1 ? "Yes" : "No" }}
+                </div>
+              </div>
+
               <!--end::Info-->
             </div>
             <!--end::User-->
@@ -169,7 +186,7 @@
     </div>
   </div>
   <!--end::Navbar-->
-  <div class="card">
+  <div class="card" v-if="tabIndex === 0">
     <div class="card-body">
       <div class="tab-content pt-3" id="kt_tabs">
         <div
@@ -191,7 +208,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" v-if="tabIndex === 1">
     <div class="card-body">
       <div class="tab-content" id="kt_tabs">
         <div
@@ -203,17 +220,13 @@
             <!--begin::Card title-->
             <div class="card-title">
               <!--begin::Search-->
-              <div class="d-flex align-items-center position-relative my-1">
-                <span class="card-label fw-bolder fs-3 mb-1"
-                  >Employee Infos</span
-                >
-
+              <div class="d-flex align-items-center position-relative">
                 <input
                   type="text"
                   v-model="search"
                   @input="searchItems()"
-                  class="form-control form-control-solid w-250px ps-15"
-                  placeholder="Search Employee Infos"
+                  class="form-control form-control-solid"
+                  placeholder="Search Employee"
                 />
               </div>
               <!--end::Search-->
@@ -234,7 +247,7 @@
                   data-bs-target="#kt_modal_add_entity_info"
                 >
                   <i class="fas fa-plus"></i>
-                  Add Employee Info
+                  Add Resource Person
                 </button>
               </div>
             </div>
@@ -383,11 +396,9 @@ export default defineComponent({
     async getEntity() {
       const route = useRoute();
       const id = route.params.id;
-
       await ApiService.get("entity/infos/" + id)
         .then((response) => {
           this.entityInfos = response.data;
-          console.log(response.data);
         })
         .catch(({ response }) => {
           console.log(response);
