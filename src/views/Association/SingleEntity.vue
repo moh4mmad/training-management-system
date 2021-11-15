@@ -239,15 +239,9 @@
                 class="d-flex justify-content-end"
                 data-kt-infos-table-toolbar="base"
               >
-                <button
-                  @click="add"
-                  type="button"
-                  class="btn btn-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#kt_modal_add_entity_info"
-                >
-                  <i class="fas fa-plus"></i>
+                <button @click="add" type="button" class="btn btn-primary">
                   Add Resource Person
+                  <i class="fas fa-plus"></i>
                 </button>
               </div>
             </div>
@@ -261,17 +255,26 @@
             <template v-slot:cell-sl="{ row }">
               {{ row.id }}
             </template>
-            <template v-slot:cell-entity_name="{ row: infos }">
-              {{ infos.entity_name }}
+            <template v-slot:cell-photo="{ row: infos }">
+              {{ infos.photo }}
             </template>
-            <template v-slot:cell-entity_sub_type="{ row: infos }">
-              {{ infos.entity_sub_type }}
+            <template v-slot:cell-name="{ row: infos }">
+              {{ infos.name }}
             </template>
-            <template v-slot:cell-registration_number="{ row: infos }">
-              {{ infos.registration_number }}
+            <template v-slot:cell-designation="{ row: infos }">
+              {{ infos.designation }}
             </template>
-            <template v-slot:cell-registration_authority="{ row: infos }">
-              {{ infos.registration_authority }}
+            <template v-slot:cell-dob="{ row: infos }">
+              {{ infos.dob }}
+            </template>
+            <template v-slot:cell-nid="{ row: infos }">
+              {{ infos.nid }}
+            </template>
+            <template v-slot:cell-mobile="{ row: infos }">
+              {{ infos.mobile }}
+            </template>
+            <template v-slot:cell-email="{ row: infos }">
+              {{ infos.email }}
             </template>
 
             <template v-slot:cell-actions="{ row: infos }">
@@ -315,7 +318,7 @@
   </div>
 
   <!-- <router-view></router-view> -->
-  <InfoModal></InfoModal>
+  <EmployeeModal></EmployeeModal>
 </template>
 
 <script lang="ts">
@@ -324,47 +327,61 @@ import Datatable from "@/components/kt-datatable/KTDatatable.vue";
 import ApiService from "@/core/services/ApiService";
 import { useRoute } from "vue-router";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import InfoModal from "@/components/modals/forms/entity/InfoModal.vue";
+import EmployeeModal from "@/components/modals/forms/employee/EmployeeModal.vue";
 
 export default defineComponent({
   name: "profile",
   components: {
     Datatable,
-    InfoModal,
+    EmployeeModal,
   },
-
+  setup() {
+    const route = useRoute();
+    const entityInfoID = route.params.id;
+    return { entityInfoID };
+  },
   data() {
     return {
       tableHeader: [
         {
-          name: "sl",
-          key: "sl",
+          name: "Photo",
+          key: "photo",
           sortable: true,
         },
         {
-          name: "Entity Name",
-          key: "entity_name",
+          name: "Name",
+          key: "name",
           sortable: true,
         },
         {
-          name: "Entity Sub Type",
-          key: "entity_sub_type",
+          name: "Designation",
+          key: "designation",
           sortable: true,
         },
         {
-          name: "Registration_number",
-          key: "registration_number",
+          name: "Date of Birth",
+          key: "dob",
           sortable: true,
         },
         {
-          name: "Registration_authority",
-          key: "registration_authority",
-          sortable: true,
-        },
-        {
-          name: "Actions",
-          key: "actions",
+          name: "NID",
+          key: "nid",
           sortable: false,
+        },
+        {
+          name: "Mobile",
+          key: "mobile",
+          sortable: false,
+        },
+        {
+          name: "Email",
+          key: "email",
+          sortable: false,
+        },
+        {
+          name: "Action",
+          key: "actions",
+          sortable: true,
         },
       ],
       lists: [],
@@ -376,8 +393,8 @@ export default defineComponent({
     };
   },
   async created() {
-    await this.getEntity();
     await this.getEmployee();
+    await this.getEntity();
     Object.assign(this.tableData, this.lists);
   },
   methods: {
@@ -385,7 +402,7 @@ export default defineComponent({
       this.tabIndex = parseInt(event.target.getAttribute("data-tab-index"));
     },
     async getEmployee() {
-      await ApiService.get("entity/infos")
+      await ApiService.get("employee/search?entity_info=" + this.entityInfoID)
         .then((response) => {
           this.lists = response.data;
         })
@@ -394,9 +411,7 @@ export default defineComponent({
         });
     },
     async getEntity() {
-      const route = useRoute();
-      const id = route.params.id;
-      await ApiService.get("entity/infos/" + id)
+      await ApiService.get("entity/infos/" + this.entityInfoID)
         .then((response) => {
           this.entityInfos = response.data;
         })
@@ -434,11 +449,15 @@ export default defineComponent({
     },
 
     add() {
-      this.emitter.emit("add-modal-data", true);
+      this.$router.push({ name: "entity employee", params: { id: 1 } });
     },
 
     view(infos) {
       this.data = infos;
+      this.$router.push({
+        name: "entityEmployeeProfiles",
+        params: { id: infos.id },
+      });
     },
 
     Delete(id) {
@@ -451,7 +470,7 @@ export default defineComponent({
         confirmButtonText: "Yes, delete!",
       }).then((result) => {
         if (result.isConfirmed) {
-          ApiService.delete("entity/infos/" + `${id}`)
+          ApiService.delete("employee/newProfile/" + `${id}`)
             .then((response) => {
               this.emitter.emit("infos-updated", true);
               Swal.fire("Deleted!", response.data.message, "success");

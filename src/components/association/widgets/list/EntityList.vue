@@ -1,5 +1,42 @@
 <template>
   <!--begin::List Widget 8-->
+  <div class="card mb-5 mb-xl-10">
+    <!--begin::Label-->
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="fs-6 fw-bold mb-2">
+            <span>Entity Type</span>
+          </label>
+          <!--end::Label-->
+
+          <!--begin::Input-->
+          <el-form-item prop="entity_type_id">
+            <el-select
+              class="form-select-solid"
+              placeholder="Select Entity Type"
+              v-model="formData.entity_type_id"
+              @change="filterEntity()"
+              filterable
+            >
+              <el-option
+                v-for="types in entityTypes"
+                :key="types.id"
+                :label="types.name"
+                :value="types.id"
+                >{{ types.name }}</el-option
+              >
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="col-md-6">
+          <label class="fs-6 fw-bold mb-2">
+            <span>Tranche</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <!--begin::Header-->
     <div class="card-header align-items-center border-0 mt-4">
@@ -122,10 +159,15 @@ export default defineComponent({
       lists: [],
       tableData: [],
       data: {},
+      entityTypes: [],
+      formData: {
+        entity_type_id: "",
+      },
     };
   },
   async created() {
     await this.getData();
+    await this.getTypes();
     this.emitter.on("infos-updated", async () => {
       await this.getData();
     });
@@ -140,7 +182,26 @@ export default defineComponent({
           console.log(response);
         });
     },
-
+    async getTypes() {
+      await ApiService.get("entity/types")
+        .then((response) => {
+          this.entityTypes = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+    async filterEntity() {
+      await ApiService.get(
+        "entity/infos?entity_type=" + this.formData.entity_type_id
+      )
+        .then((response) => {
+          this.lists = response.data;
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
     edit(data) {
       this.emitter.emit("edit-modal-data", data);
     },
