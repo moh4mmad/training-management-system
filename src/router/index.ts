@@ -35,7 +35,17 @@ const routes: Array<RouteRecordRaw> = [
         name: "single entity",
         component: () => import("@/views/Association/SingleEntity.vue"),
       },
-
+      {
+        path: "entity-employee/:id",
+        name: "entity employee",
+        component: () => import("@/views/Association/EntityEmployee.vue"),
+      },
+      {
+        path: "entityEmployeeProfiles/viewProfile/:id",
+        name: "entityEmployeeProfiles",
+        component: () =>
+          import("@/views/Association/EntityEmployeeProfile.vue"),
+      },
       {
         path: "new-entity",
         name: "new entity",
