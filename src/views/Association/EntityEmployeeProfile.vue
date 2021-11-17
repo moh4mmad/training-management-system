@@ -1,245 +1,425 @@
 <template>
-  <div class="card mb-5 mb-xl-10">
-    <div
-      class="card-header border-0 cursor-pointer"
-      role="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#employee_information"
-      aria-expanded="true"
-      aria-controls="form"
-    >
+  <div class="card mb-5 mb-xxl-8">
+    <div class="card-header cursor-pointer">
+      <!--begin::Card title-->
       <div class="card-title m-0">
-        <h3 class="fw-bolder m-0">Employee Information</h3>
+        <h3 class="fw-bolder m-0">Profile Details</h3>
+      </div>
+      <div class="btn-group" role="group">
+        <button
+          class="btn btn-primary align-self-center mr-2"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Assign Entity"
+          @click="assignEntity"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_assign_entity"
+        >
+          <i class="fa fa-home fa-lg"></i>
+        </button>
+        <button
+          class="btn btn-success align-self-center mr-2"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Assign Institute"
+          @click="assignInstitute"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_assign_institute"
+        >
+          <i class="fa fa-university"></i></button
+        ><button
+          class="btn btn-primary align-self-center mr-2"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Assign Role"
+          @click="assignRole"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_assign_role"
+        >
+          <i class="fa fa-users fa-lg"></i>
+        </button>
+        <button
+          class="btn btn-warning align-self-center mr-2"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Change Password"
+          @click="changePassword(employee)"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_change_pass"
+        >
+          <i class="fa fa-key fa-lg"></i>
+        </button>
+        <button
+          class="btn btn-secondary align-self-center mr-2"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Deactivate Resource"
+          @click="Deactivate()"
+        >
+          <i class="fas fa-minus-square fa-lg"></i>
+        </button>
+        <button
+          class="btn btn-danger align-self-center"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Delete Resource"
+          @click="Delete()"
+        >
+          <i class="fa fa-user-times fa-lg"></i>
+        </button>
       </div>
     </div>
-    <div id="employee_information" class="collapse show">
-      <div class="collapse show">
-        <div class="card-body border-top p-9">
-          <div class="row">
-            <div class="col-md-6">
-              <label class="form-label required">Name</label>
-              <Field
-                v-model="employee.name"
-                type="text"
-                name="name"
-                class="form-control form-control-lg"
-                rows="3"
-              ></Field>
-              <ErrorMessage
-                name="name"
-                class="fv-plugins-message-container invalid-feedback"
-              ></ErrorMessage>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label required">Designation</label>
-              <Field
-                v-model="employee.designation"
-                name="designation"
-                class="form-control form-control-lg"
-              ></Field>
-              <ErrorMessage
-                name="designation"
-                class="fv-plugins-message-container invalid-feedback"
-              ></ErrorMessage>
+    <div class="card-body pt-9 pb-0">
+      <!--begin::Details-->
+      <div class="row">
+        <!--begin: Pic-->
+        <div class="col-md-2">
+          <div class="me-7 mb-4 ml-3">
+            <div
+              class="
+                symbol symbol-100px symbol-lg-160px symbol-fixed
+                position-relative
+              "
+            >
+              <span class="fw-bold d-block pt-1"
+                ><i class="fa fa-user fa-8x"></i
+              ></span>
             </div>
           </div>
-
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label class="form-label required">Date of birth</label>
-
-              <el-form-item prop="date">
-                <el-date-picker
-                  v-model="employee.dob"
-                  value-format="YYYY-MM-DD"
-                  format="DD-MM-YYYY"
-                  type="date"
-                  name="dob"
-                >
-                </el-date-picker>
-              </el-form-item>
-              <!--end::Input-->
+        </div>
+        <div class="col-md-5">
+          <div class="flex-grow-1">
+            <!--begin::Title-->
+            <div
+              class="
+                d-flex
+                justify-content-between
+                align-items-start
+                flex-wrap
+                mb-2
+              "
+            >
+              <!--begin::User-->
+              <div class="d-flex flex-column">
+                <!--begin::Name-->
+                <div class="d-flex align-items-center mb-2">
+                  <a
+                    class="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                    >{{ employee.name }}
+                  </a>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                  <a class="font-weight-bold text-hover-primary fs-5 me-1">{{
+                    employee.designation
+                  }}</a>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      me-5
+                      mb-2
+                    "
+                  >
+                    <span class="fw-bold d-block pt-1 me-2"
+                      ><i class="fa fa-cloud mr-2"></i></span
+                    >Date Of Birth : {{ employee.dob }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      me-5
+                      mb-2
+                    "
+                  >
+                    <span class="fw-bold d-block pt-1 me-2"
+                      ><i class="fa fa-address-card"></i
+                    ></span>
+                    NID : {{ employee.nid }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      me-5
+                      mb-2
+                    "
+                  >
+                    <span class="fw-bold d-block pt-1 me-2"
+                      ><i class="fa fa-cloud mr-2"></i></span
+                    >Gender : {{ employee.gender }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      mb-2
+                    "
+                  >
+                    <span class="fw-bold d-block pt-1 me-2"
+                      ><i class="fa fa-address-card"></i></span
+                    >Religion : {{ employee.religion }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      mb-2
+                    "
+                  >
+                    <span class="fw-bold d-block pt-1 me-2"
+                      ><i class="fa fa-user"></i></span
+                    >Username : {{ employee.email }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <hr />
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      mb-2
+                    "
+                  >
+                    <span class="svg-icon svg-icon-4 me-1">
+                      <inline-svg
+                        src="media/icons/duotune/communication/com009.svg"
+                      />
+                    </span>
+                    Active Status:
+                    {{ employee.actve_status == 1 ? "Yes" : "No" }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      mb-2
+                    "
+                  >
+                    <span class="svg-icon svg-icon-4 me-1">
+                      <inline-svg
+                        src="media/icons/duotune/communication/com009.svg"
+                      />
+                    </span>
+                    Last Login :
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">
-                <span>National ID</span>
-              </label>
-              <!--end::Label-->
-
-              <!--begin::Input-->
-              <Field
-                v-model="employee.nid"
-                name="nid"
-                class="form-control form-control-lg"
-                value=""
-              />
-            </div>
+            <!--end::Title-->
           </div>
-
-          <div class="row mt-3">
-            <div class="col-md-4">
-              <label>
-                <span>Passport</span>
-              </label>
-              <Field
-                v-model="employee.passport"
-                name="passport"
-                class="form-control form-control-lg"
-                value=""
-              />
+        </div>
+        <div class="col-md-5">
+          <!--begin::Info-->
+          <div class="flex-grow-1">
+            <!--begin::Title-->
+            <div
+              class="
+                d-flex
+                justify-content-between
+                align-items-start
+                flex-wrap
+                mb-2
+              "
+            >
+              <!--begin::User-->
+              <div class="d-flex flex-column">
+                <!--begin::Info-->
+                <br />
+                <br />
+                <br />
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      mb-2
+                    "
+                  >
+                    <span class="fw-bold d-block pt-1 me-2"
+                      ><i class="fa fa-phone"></i></span
+                    >Contact : {{ employee.mobile }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      mb-2
+                    "
+                  >
+                    <span class="svg-icon svg-icon-4 me-1">
+                      <inline-svg
+                        src="media/icons/duotune/communication/com011.svg"
+                      />
+                    </span>
+                    Email : {{ employee.email }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      me-5
+                      mb-2
+                    "
+                  >
+                    <span class="svg-icon svg-icon-4 me-1">
+                      <inline-svg
+                        src="media/icons/duotune/general/gen018.svg"
+                      /> </span
+                    >Present Address: {{ employee.present_address }}
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap fw-bold fs-6">
+                  <div
+                    class="
+                      d-flex
+                      align-items-center
+                      text-gray-800 text-hover-primary
+                      me-5
+                      mb-2
+                    "
+                  >
+                    <span class="svg-icon svg-icon-4 me-1">
+                      <inline-svg
+                        src="media/icons/duotune/general/gen018.svg"
+                      /> </span
+                    >Parmanent Address: {{ employee.permanent_address }}
+                  </div>
+                </div>
+                <!--end::Info-->
+              </div>
+              <!--end::User-->
             </div>
-            <div class="col-md-4">
-              <label class="form-label">
-                <span>Driving License</span>
-              </label>
-              <Field
-                v-model="employee.driving_license"
-                name="driving_license"
-                class="form-control form-control-lg"
-                value=""
-              />
-            </div>
-            <div class="col-md-4">
-              <label class="form-label required"><span>Mobile</span></label>
-              <Field
-                v-model="employee.mobile"
-                name="mobile"
-                class="form-control form-control-lg"
-                value=""
-              />
-              <ErrorMessage
-                name="mobile"
-                class="fv-plugins-message-container invalid-feedback"
-              ></ErrorMessage>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-md-4">
-              <label class="form-label required">
-                <span>Email</span>
-              </label>
-              <Field
-                v-model="employee.email"
-                name="employeeEmail"
-                class="form-control form-control-lg"
-                value=""
-              />
-              <ErrorMessage
-                name="employeeEmail"
-                class="fv-plugins-message-container invalid-feedback"
-              ></ErrorMessage>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label"><span>Gender</span></label>
-              <Field
-                v-model="employee.gender"
-                name="gender"
-                class="form-control form-control-lg"
-                value=""
-              />
-              <!--end::Input-->
-              <ErrorMessage
-                name="gender"
-                class="fv-plugins-message-container invalid-feedback"
-              ></ErrorMessage>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label"><span>Religion</span></label>
-              <Field
-                v-model="employee.religion"
-                name="religion"
-                class="form-control form-control-lg"
-                value=""
-              />
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-md-8">
-              <label class="d-flex align-items-center form-label">
-                <span>Present Address</span>
-              </label>
-              <Field
-                v-model="employee.present_address"
-                name="present_address"
-                class="form-control form-control-lg"
-              />
-            </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-md-8">
-              <label class="d-flex align-items-center form-label">
-                <span>Permanent Address</span>
-              </label>
-              <Field
-                v-model="employee.permanent_address"
-                name="permanent_address"
-                class="form-control form-control-lg"
-              />
-            </div>
+            <!--end::Title-->
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="card-body">
-    <div class="d-flex"></div>
+  <div class="card mb-5 mb-xxl-8">
+    <div class="card-header cursor-pointer">
+      <div class="card-title m-0">
+        <h3 class="fw-bolder m-0">Roles</h3>
+      </div>
+    </div>
+    <div class="card-body">
+      <Datatable
+        :table-data="tableData"
+        :table-header="tableHeader"
+        :enable-items-per-page-dropdown="true"
+      >
+        <template v-slot:cell-sl=""> </template>
+        <template v-slot:cell-actions="">
+          <button
+            data-bs-toggle="modal"
+            data-bs-target="#infos_details"
+            class="
+              btn btn-icon btn-bg-light btn-active-color-primary btn-sm
+              me-1
+            "
+          >
+            <i class="fas fa-eye"></i>
+          </button>
+          <!-- <button
+            class="btn btn-primary align-self-center mr-2"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Role Deactivate"
+          >
+            Role Deactivate
+          </button>
+          <button
+            class="btn btn-primary align-self-center mr-2"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Delete Role"
+          >
+            Delete Role
+          </button> -->
+        </template>
+      </Datatable>
+    </div>
   </div>
+  <AssignEntityModal></AssignEntityModal>
+  <AssignInstituteModal></AssignInstituteModal>
+  <AssignRoleModal></AssignRoleModal>
+  <ChangePasswordModal></ChangePasswordModal>
 </template>
-
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { Form, Field, ErrorMessage } from "vee-validate";
+import { defineComponent } from "vue";
+import Datatable from "@/components/kt-datatable/KTDatatable.vue";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import AssignEntityModal from "@/components/modals/forms/association/AssignEntityModal.vue";
+import AssignInstituteModal from "@/components/modals/forms/association/AssignInstituteModal.vue";
+import AssignRoleModal from "@/components/modals/forms/association/AssignRoleModal.vue";
+import ChangePasswordModal from "@/components/modals/forms/association/ChangePasswordModal.vue";
 import ApiService from "@/core/services/ApiService";
 import { useRoute } from "vue-router";
-// import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
   name: "profile",
-  components: {},
+  components: {
+    Datatable,
+    AssignEntityModal,
+    AssignInstituteModal,
+    AssignRoleModal,
+    ChangePasswordModal,
+  },
   setup() {
     const route = useRoute();
-    const entityInfoID = route.params.id;
-    return { entityInfoID };
+    const employeeID = route.params.id;
+    return { employeeID };
   },
   data() {
     return {
       tableHeader: [
         {
-          name: "Photo",
-          key: "photo",
-          sortable: true,
-        },
-        {
-          name: "Name",
+          name: "Role",
           key: "name",
           sortable: true,
         },
         {
-          name: "Designation",
+          name: "Training Partner",
           key: "designation",
           sortable: true,
         },
         {
-          name: "Date of Birth",
+          name: "Training Institute",
           key: "dob",
           sortable: true,
         },
         {
-          name: "NID",
+          name: "Active?",
           key: "nid",
-          sortable: false,
-        },
-        {
-          name: "Mobile",
-          key: "mobile",
-          sortable: false,
-        },
-        {
-          name: "Email",
-          key: "email",
           sortable: false,
         },
         {
@@ -248,54 +428,56 @@ export default defineComponent({
           sortable: true,
         },
       ],
-      employee: {
-        name: "test",
-        designation: "test",
-        dob: "02.03.2021",
-        nid: "125478",
-        passport: "78895623145",
-        driving_license: "7878787878",
-        mobile: "78458956",
-        email: "test@gmail.com",
-        gender: "M",
-        religion: "Islam",
-        present_address: "test",
-        permanent_address: "test",
-      },
-      lists: [],
+      employee: [],
       search: "",
       tableData: [],
       data: {},
-      tabIndex: ref(0),
-      entityInfos: [],
     };
   },
   async created() {
     await this.getEmployee();
-    await this.getEntity();
-    Object.assign(this.tableData, this.lists);
   },
   methods: {
-    setActiveTab(event) {
-      this.tabIndex = parseInt(event.target.getAttribute("data-tab-index"));
-    },
     async getEmployee() {
-      await ApiService.get("employee/search?entity_info=" + this.entityInfoID)
+      await ApiService.get("employee/lists/" + this.employeeID)
         .then((response) => {
-          this.lists = response.data;
+          this.employee = response.data;
         })
         .catch(({ response }) => {
           console.log(response);
         });
     },
-    async getEntity() {
-      await ApiService.get("entity/infos/" + this.entityInfoID)
-        .then((response) => {
-          this.entityInfos = response.data;
-        })
-        .catch(({ response }) => {
-          console.log(response);
-        });
+    Delete() {
+      Swal.fire({
+        title: "Are you sure you want to delete this resource?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete!",
+      });
+    },
+    Deactivate() {
+      Swal.fire({
+        title: "Are you sure you want to deactivate this resource?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete!",
+      });
+    },
+    assignEntity() {
+      this.emitter.emit("add-modal-data", true);
+    },
+    assignInstitute() {
+      this.emitter.emit("add-modal-data", true);
+    },
+    assignRole() {
+      this.emitter.emit("add-modal-data", true);
+    },
+    changePassword(data) {
+      this.emitter.emit("user-data", data);
     },
   },
 });

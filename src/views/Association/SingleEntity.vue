@@ -255,9 +255,6 @@
             <template v-slot:cell-sl="{ row }">
               {{ row.id }}
             </template>
-            <template v-slot:cell-photo="{ row: infos }">
-              {{ infos.photo }}
-            </template>
             <template v-slot:cell-name="{ row: infos }">
               {{ infos.name }}
             </template>
@@ -277,9 +274,9 @@
               {{ infos.email }}
             </template>
 
-            <template v-slot:cell-actions="{ row: infos }">
+            <template v-slot:cell-actions="{ row }">
               <button
-                @click="view(infos)"
+                @click="view(row.id)"
                 data-bs-toggle="modal"
                 data-bs-target="#infos_details"
                 class="
@@ -291,7 +288,7 @@
               </button>
 
               <button
-                @click="edit(infos)"
+                @click="edit(row.id)"
                 data-bs-toggle="modal"
                 data-bs-target="#kt_modal_add_entity_info"
                 class="
@@ -303,7 +300,7 @@
               </button>
 
               <button
-                @click="Delete(infos.id)"
+                @click="Delete(row.id)"
                 class="
                   btn btn-icon btn-bg-light btn-active-color-primary btn-sm
                 "
@@ -343,11 +340,6 @@ export default defineComponent({
   data() {
     return {
       tableHeader: [
-        {
-          name: "Photo",
-          key: "photo",
-          sortable: true,
-        },
         {
           name: "Name",
           key: "name",
@@ -452,11 +444,10 @@ export default defineComponent({
       this.$router.push({ name: "entity employee", params: { id: 1 } });
     },
 
-    view(infos) {
-      this.data = infos;
+    view(id) {
       this.$router.push({
         name: "entityEmployeeProfiles",
-        params: { id: infos.id },
+        params: { id: id },
       });
     },
 
