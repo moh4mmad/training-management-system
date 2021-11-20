@@ -41,7 +41,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/Association/EntityEmployee.vue"),
       },
       {
-        path: "entityEmployeeProfiles/viewProfile/:id",
+        path: "entityEmployeeProfiles/:entity/viewProfile/:id",
         name: "entityEmployeeProfiles",
         component: () =>
           import("@/views/Association/EntityEmployeeProfile.vue"),

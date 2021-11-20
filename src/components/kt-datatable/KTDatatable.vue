@@ -18,10 +18,7 @@
         <!--begin::Table head-->
         <thead>
           <!--begin::Table row-->
-          <tr
-            class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0"
-            role="row"
-          >
+          <tr class="text-start fw-bolder fs-6 text-uppercase gs-0" role="row">
             <template v-for="(cell, i) in tableHeader" :key="i">
               <th
                 @click="
@@ -54,7 +51,7 @@
         </thead>
         <!--end::Table head-->
         <!--begin::Table body-->
-        <tbody class="fw-bold text-gray-600">
+        <tbody class="fs-6">
           <template v-if="getItems.length">
             <template v-for="(item, i) in getItems" :key="i">
               <tr class="odd">

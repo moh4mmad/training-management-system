@@ -11,7 +11,7 @@
           data-toggle="tooltip"
           data-placement="top"
           title="Assign Entity"
-          @click="assignEntity"
+          @click="employeeData()"
           data-bs-toggle="modal"
           data-bs-target="#kt_modal_assign_entity"
         >
@@ -22,7 +22,7 @@
           data-toggle="tooltip"
           data-placement="top"
           title="Assign Institute"
-          @click="assignInstitute"
+          @click="employeeData()"
           data-bs-toggle="modal"
           data-bs-target="#kt_modal_assign_institute"
         >
@@ -32,7 +32,7 @@
           data-toggle="tooltip"
           data-placement="top"
           title="Assign Role"
-          @click="assignRole"
+          @click="employeeData()"
           data-bs-toggle="modal"
           data-bs-target="#kt_modal_assign_role"
         >
@@ -50,6 +50,7 @@
           <i class="fa fa-key fa-lg"></i>
         </button>
         <button
+          v-if="employee.user.active_status == 1"
           class="btn btn-secondary align-self-center mr-2"
           data-toggle="tooltip"
           data-placement="top"
@@ -59,6 +60,16 @@
           <i class="fas fa-minus-square fa-lg"></i>
         </button>
         <button
+          v-if="employee.user.active_status == 0"
+          class="btn btn-success align-self-center mr-2"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Active Resource"
+          @click="Activate()"
+        >
+          <i class="fas fa-plus-square fa-lg"></i>
+        </button>
+        <!-- <button
           class="btn btn-danger align-self-center"
           data-toggle="tooltip"
           data-placement="top"
@@ -66,7 +77,7 @@
           @click="Delete()"
         >
           <i class="fa fa-user-times fa-lg"></i>
-        </button>
+        </button> -->
       </div>
     </div>
     <div class="card-body pt-9 pb-0">
@@ -103,8 +114,7 @@
               <div class="d-flex flex-column">
                 <!--begin::Name-->
                 <div class="d-flex align-items-center mb-2">
-                  <a
-                    class="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                  <a class="text-hover-primary fs-2 fw-bolder me-1"
                     >{{ employee.name }}
                   </a>
                 </div>
@@ -118,12 +128,12 @@
                     class="
                       d-flex
                       align-items-center
-                      text-gray-800 text-hover-primary
+                      text-hover-primary
                       me-5
                       mb-2
                     "
                   >
-                    <span class="fw-bold d-block pt-1 me-2"
+                    <span class="fw-bold d-block pt-1"
                       ><i class="fa fa-cloud mr-2"></i></span
                     >Date Of Birth : {{ employee.dob }}
                   </div>
@@ -133,13 +143,13 @@
                     class="
                       d-flex
                       align-items-center
-                      text-gray-800 text-hover-primary
+                      text-hover-primary
                       me-5
                       mb-2
                     "
                   >
-                    <span class="fw-bold d-block pt-1 me-2"
-                      ><i class="fa fa-address-card"></i
+                    <span class="fw-bold d-block pt-1"
+                      ><i class="fa fa-address-card mr-2"></i
                     ></span>
                     NID : {{ employee.nid }}
                   </div>
@@ -149,41 +159,31 @@
                     class="
                       d-flex
                       align-items-center
-                      text-gray-800 text-hover-primary
+                      text-hover-primary
                       me-5
                       mb-2
                     "
                   >
-                    <span class="fw-bold d-block pt-1 me-2"
+                    <span class="fw-bold d-block pt-1"
                       ><i class="fa fa-cloud mr-2"></i></span
                     >Gender : {{ employee.gender }}
                   </div>
                 </div>
                 <div class="d-flex flex-wrap fw-bold fs-6">
                   <div
-                    class="
-                      d-flex
-                      align-items-center
-                      text-gray-800 text-hover-primary
-                      mb-2
-                    "
+                    class="d-flex align-items-center text-hover-primary mb-2"
                   >
-                    <span class="fw-bold d-block pt-1 me-2"
-                      ><i class="fa fa-address-card"></i></span
+                    <span class="fw-bold d-block pt-1"
+                      ><i class="fa fa-address-card mr-2"></i></span
                     >Religion : {{ employee.religion }}
                   </div>
                 </div>
                 <div class="d-flex flex-wrap fw-bold fs-6">
                   <div
-                    class="
-                      d-flex
-                      align-items-center
-                      text-gray-800 text-hover-primary
-                      mb-2
-                    "
+                    class="d-flex align-items-center text-hover-primary mb-2"
                   >
-                    <span class="fw-bold d-block pt-1 me-2"
-                      ><i class="fa fa-user"></i></span
+                    <span class="fw-bold d-block pt-1"
+                      ><i class="fa fa-user mr-2"></i></span
                     >Username : {{ employee.email }}
                   </div>
                 </div>
@@ -192,12 +192,7 @@
                 </div>
                 <div class="d-flex flex-wrap fw-bold fs-6">
                   <div
-                    class="
-                      d-flex
-                      align-items-center
-                      text-gray-800 text-hover-primary
-                      mb-2
-                    "
+                    class="d-flex align-items-center text-hover-primary mb-2"
                   >
                     <span class="svg-icon svg-icon-4 me-1">
                       <inline-svg
@@ -205,17 +200,12 @@
                       />
                     </span>
                     Active Status:
-                    {{ employee.actve_status == 1 ? "Yes" : "No" }}
+                    {{ employee.user.active_status == 1 ? "Yes" : "No" }}
                   </div>
                 </div>
                 <div class="d-flex flex-wrap fw-bold fs-6">
                   <div
-                    class="
-                      d-flex
-                      align-items-center
-                      text-gray-800 text-hover-primary
-                      mb-2
-                    "
+                    class="d-flex align-items-center text-hover-primary mb-2"
                   >
                     <span class="svg-icon svg-icon-4 me-1">
                       <inline-svg
@@ -251,26 +241,16 @@
                 <br />
                 <div class="d-flex flex-wrap fw-bold fs-6">
                   <div
-                    class="
-                      d-flex
-                      align-items-center
-                      text-gray-800 text-hover-primary
-                      mb-2
-                    "
+                    class="d-flex align-items-center text-hover-primary mb-2"
                   >
-                    <span class="fw-bold d-block pt-1 me-2"
-                      ><i class="fa fa-phone"></i></span
+                    <span class="fw-bold d-block pt-1"
+                      ><i class="fa fa-phone mr-2"></i></span
                     >Contact : {{ employee.mobile }}
                   </div>
                 </div>
                 <div class="d-flex flex-wrap fw-bold fs-6">
                   <div
-                    class="
-                      d-flex
-                      align-items-center
-                      text-gray-800 text-hover-primary
-                      mb-2
-                    "
+                    class="d-flex align-items-center text-hover-primary mb-2"
                   >
                     <span class="svg-icon svg-icon-4 me-1">
                       <inline-svg
@@ -285,7 +265,7 @@
                     class="
                       d-flex
                       align-items-center
-                      text-gray-800 text-hover-primary
+                      text-hover-primary
                       me-5
                       mb-2
                     "
@@ -302,7 +282,7 @@
                     class="
                       d-flex
                       align-items-center
-                      text-gray-800 text-hover-primary
+                      text-hover-primary
                       me-5
                       mb-2
                     "
@@ -337,41 +317,69 @@
         :table-header="tableHeader"
         :enable-items-per-page-dropdown="true"
       >
-        <template v-slot:cell-sl=""> </template>
-        <template v-slot:cell-actions="">
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#infos_details"
-            class="
-              btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-              me-1
-            "
-          >
-            <i class="fas fa-eye"></i>
-          </button>
-          <!-- <button
-            class="btn btn-primary align-self-center mr-2"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Role Deactivate"
-          >
-            Role Deactivate
-          </button>
-          <button
-            class="btn btn-primary align-self-center mr-2"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Delete Role"
-          >
-            Delete Role
-          </button> -->
+        <template v-slot:cell-role="{ row }">
+          <p class="bg-primary text-white text-center align-middle">
+            Team : {{ row.role.role_name }}
+          </p>
+        </template>
+
+        <template v-slot:cell-training_partner="{ row }">
+          <p class="align-middle">
+            {{ row.entity.entity_short_name }}
+          </p>
+        </template>
+
+        <template v-slot:cell-training_institute="{ row }">
+          <p class="align-middle">
+            {{ row.entity.entity_name }}
+          </p>
+        </template>
+
+        <template v-slot:cell-active="{ row }">
+          <p class="align-middle">
+            {{ row.active_status == 1 ? "Yes" : "No" }}
+          </p>
+        </template>
+
+        <template v-slot:cell-actions="{ row }">
+          <div class="btn-group" role="group">
+            <button
+              v-if="row.active_status == 1"
+              class="btn btn-info btn-sm mr-2"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Deactivate Role"
+              @click="RoleStatus(row.id, 0)"
+            >
+              Deactivate
+            </button>
+            <button
+              v-if="row.active_status == 0"
+              class="btn btn-success btn-sm mr-2"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Active Role"
+              @click="RoleStatus(row.id, 1)"
+            >
+              Active
+            </button>
+            <button
+              class="btn btn-danger btn-sm"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Delete Role"
+              @click="DeleteRole(row.id)"
+            >
+              Delete
+            </button>
+          </div>
         </template>
       </Datatable>
     </div>
   </div>
   <AssignEntityModal></AssignEntityModal>
   <AssignInstituteModal></AssignInstituteModal>
-  <AssignRoleModal></AssignRoleModal>
+  <AssignResource></AssignResource>
   <ChangePasswordModal></ChangePasswordModal>
 </template>
 <script lang="ts">
@@ -380,7 +388,7 @@ import Datatable from "@/components/kt-datatable/KTDatatable.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import AssignEntityModal from "@/components/modals/forms/association/AssignEntityModal.vue";
 import AssignInstituteModal from "@/components/modals/forms/association/AssignInstituteModal.vue";
-import AssignRoleModal from "@/components/modals/forms/association/AssignRoleModal.vue";
+import AssignResource from "@/components/modals/forms/association/AssignResource.vue";
 import ChangePasswordModal from "@/components/modals/forms/association/ChangePasswordModal.vue";
 import ApiService from "@/core/services/ApiService";
 import { useRoute } from "vue-router";
@@ -391,51 +399,58 @@ export default defineComponent({
     Datatable,
     AssignEntityModal,
     AssignInstituteModal,
-    AssignRoleModal,
+    AssignResource,
     ChangePasswordModal,
   },
   setup() {
     const route = useRoute();
     const employeeID = route.params.id;
-    return { employeeID };
+    const entityID = route.params.entity;
+    return { employeeID, entityID };
   },
   data() {
     return {
       tableHeader: [
         {
           name: "Role",
-          key: "name",
+          key: "role",
           sortable: true,
         },
         {
           name: "Training Partner",
-          key: "designation",
+          key: "training_partner",
           sortable: true,
         },
         {
           name: "Training Institute",
-          key: "dob",
+          key: "training_institute",
           sortable: true,
         },
         {
           name: "Active?",
-          key: "nid",
+          key: "active",
           sortable: false,
         },
         {
           name: "Action",
           key: "actions",
-          sortable: true,
+          sortable: false,
         },
       ],
-      employee: [],
+      employee: {
+        user_id: "",
+        user: {
+          active_status: 1,
+        },
+        roles: [],
+      },
       search: "",
       tableData: [],
-      data: {},
     };
   },
   async created() {
     await this.getEmployee();
+    Object.assign(this.tableData, this.employee.roles);
   },
   methods: {
     async getEmployee() {
@@ -447,16 +462,16 @@ export default defineComponent({
           console.log(response);
         });
     },
-    Delete() {
-      Swal.fire({
-        title: "Are you sure you want to delete this resource?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete!",
-      });
-    },
+    // Delete() {
+    //   Swal.fire({
+    //     title: "Are you sure you want to delete this resource?",
+    //     icon: "warning",
+    //     showCancelButton: true,
+    //     confirmButtonColor: "#3085d6",
+    //     cancelButtonColor: "#d33",
+    //     confirmButtonText: "Yes, delete!",
+    //   });
+    // },
     Deactivate() {
       Swal.fire({
         title: "Are you sure you want to deactivate this resource?",
@@ -464,17 +479,246 @@ export default defineComponent({
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete!",
+        confirmButtonText: "Yes, deactivate!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          let data = {
+            user_id: this.employee.user_id,
+            active_status: 0,
+          };
+          await ApiService.post("employee/changeActiveStatus", data)
+            .then((response) => {
+              if (response.status == 200) {
+                this.getEmployee();
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  title: "Error",
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              Swal.fire({
+                title: "Unknown error",
+                html: response.data.error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Close",
+                customClass: {
+                  confirmButton: "btn btn-danger",
+                },
+              });
+              console.log(response);
+            });
+        }
       });
     },
-    assignEntity() {
-      this.emitter.emit("add-modal-data", true);
+
+    RoleStatus(id, type) {
+      const status = type == 1 ? "activate" : "deactivate";
+      Swal.fire({
+        title: "Are you sure you want to " + status + " this role?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, " + status + "!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          let data = {
+            id: id,
+            active_status: type,
+          };
+          await ApiService.post("employee/changeRoleActiveStatus", data)
+            .then(async (response) => {
+              if (response.status == 200) {
+                await this.getEmployee();
+                Object.assign(this.tableData, this.employee.roles);
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  title: "Error",
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              Swal.fire({
+                title: "Unknown error",
+                html: response.data.error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Close",
+                customClass: {
+                  confirmButton: "btn btn-danger",
+                },
+              });
+              console.log(response);
+            });
+        }
+      });
     },
-    assignInstitute() {
-      this.emitter.emit("add-modal-data", true);
+
+    DeleteRole(id) {
+      Swal.fire({
+        title: "Are you sure you want to delete this role?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await ApiService.delete("employee/deleteRole/" + id)
+            .then(async (response) => {
+              if (response.status == 200) {
+                await this.getEmployee();
+                Object.assign(this.tableData, this.employee.roles);
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  title: "Error",
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              Swal.fire({
+                title: "Unknown error",
+                html: response.data.error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Close",
+                customClass: {
+                  confirmButton: "btn btn-danger",
+                },
+              });
+              console.log(response);
+            });
+        }
+      });
     },
-    assignRole() {
-      this.emitter.emit("add-modal-data", true);
+
+    Activate() {
+      Swal.fire({
+        title: "Are you sure you want to activate this resource?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, activate!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          let data = {
+            user_id: this.employee.user_id,
+            active_status: 1,
+          };
+          await ApiService.post("employee/changeActiveStatus", data)
+            .then((response) => {
+              if (response.status == 200) {
+                this.getEmployee();
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok",
+                  customClass: {
+                    confirmButton: "btn btn-primary",
+                  },
+                });
+              } else {
+                let err = "";
+                for (const field of Object.keys(response.data.errors)) {
+                  err += response.data.errors[field][0] + "<br>";
+                }
+                Swal.fire({
+                  title: "Error",
+                  html: err,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Close",
+                  customClass: {
+                    confirmButton: "btn btn-danger",
+                  },
+                });
+              }
+            })
+            .catch(({ response }) => {
+              Swal.fire({
+                title: "Unknown error",
+                html: response.data.error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Close",
+                customClass: {
+                  confirmButton: "btn btn-danger",
+                },
+              });
+              console.log(response);
+            });
+        }
+      });
+    },
+    employeeData() {
+      this.emitter.emit("assign_data", {
+        employee: this.employee,
+        entity: this.entityID,
+      });
     },
     changePassword(data) {
       this.emitter.emit("user-data", data);

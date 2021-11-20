@@ -30,7 +30,11 @@
         </div>
         <!--end::Modal header-->
         <!--begin::Form-->
-        <Form class="form" :validation-schema="Schema">
+        <Form
+          class="form"
+          :validation-schema="Schema"
+          @submit.prevent="submit()"
+        >
           <!--begin::Modal body-->
           <div class="modal-body py-10 px-lg-17">
             <!--begin::Scroll-->
@@ -120,7 +124,7 @@
               :data-kt-indicator="loading ? 'on' : null"
               class="btn btn-lg btn-primary"
               type="submit"
-              @click="formSubmit()"
+              @click="submit()"
             >
               <span v-if="!loading" class="indicator-label">
                 Submit
@@ -199,7 +203,7 @@ export default defineComponent({
               err += response.data.errors[field][0] + "<br>";
             }
             Swal.fire({
-              title: "Please check all the required field",
+              title: "Error",
               html: err,
               icon: "error",
               buttonsStyling: false,
