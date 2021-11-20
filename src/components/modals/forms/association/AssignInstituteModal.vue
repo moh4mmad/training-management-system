@@ -30,12 +30,7 @@
         </div>
         <!--end::Modal header-->
         <!--begin::Form-->
-        <el-form
-          @submit.prevent="submit()"
-          :model="formData"
-          :rules="rules"
-          ref="formRef"
-        >
+        <form @submit.prevent="submit()">
           <!--begin::Modal body-->
           <div class="modal-body py-10 px-lg-17">
             <!--begin::Scroll-->
@@ -55,18 +50,23 @@
                     <span>Entity</span>
                   </label>
                   <el-select
+                    style="width: 100%"
                     class="form-select-solid"
                     placeholder="Select Entity"
-                    v-model="entity.entity_type"
                     filterable
-                    @change="getRoles()"
+                    v-model="entityId"
+                    @change="trainingInstitute()"
                   >
                     <el-option
                       v-for="info in entityInfos"
                       :key="info.id"
-                      :label="info.entity_name"
-                      :value="info.entity_type_id"
-                      >{{ info.entity_name }}</el-option
+                      :label="
+                        '[' + info.entity_short_name + '] - ' + info.entity_name
+                      "
+                      :value="info.id"
+                      >{{
+                        "[" + info.entity_short_name + "] - " + info.entity_name
+                      }}</el-option
                     >
                   </el-select>
                 </div>
@@ -77,11 +77,31 @@
                     <span>Training Institute</span>
                   </label>
                   <el-select
+                    style="width: 100%"
                     class="form-select-solid"
                     placeholder="Select Training Institute"
+                    v-model="obj"
+                    @change="getRoles()"
                     filterable
+                    value-key="id"
                   >
-                    <el-option></el-option>
+                    <el-option
+                      v-for="training in institutes"
+                      :key="training.id"
+                      :label="
+                        '[' +
+                        training.entity_short_name +
+                        '] - ' +
+                        training.entity_name
+                      "
+                      :value="training"
+                      >{{
+                        "[" +
+                        training.entity_short_name +
+                        "] - " +
+                        training.entity_name
+                      }}</el-option
+                    >
                   </el-select>
                 </div>
               </div>
@@ -91,11 +111,19 @@
                     <span>Role</span>
                   </label>
                   <el-select
+                    style="width: 100%"
                     class="form-select-solid"
                     placeholder="Select Role"
+                    v-model="entity.entity_type_role_id"
                     filterable
                   >
-                    <el-option></el-option>
+                    <el-option
+                      v-for="info in entityRoles"
+                      :key="info.id"
+                      :label="info.role_name + ' - ' + info.role_title"
+                      :value="info.id"
+                      >{{ info.role_name + " - " + info.role_title }}</el-option
+                    >
                   </el-select>
                 </div>
               </div>
@@ -107,12 +135,8 @@
           <!--begin::Modal footer-->
           <div class="modal-footer flex-center">
             <!--begin::Button-->
-            <button
-              type="reset"
-              id="kt_modal_assign_institute_cancel"
-              class="btn btn-light me-3"
-            >
-              Discard
+            <button data-bs-dismiss="modal" class="btn btn-light me-3">
+              Close
             </button>
             <!--end::Button-->
 
@@ -138,7 +162,7 @@
             <!--end::Button-->
           </div>
           <!--end::Modal footer-->
-        </el-form>
+        </form>
         <!--end::Form-->
       </div>
     </div>
@@ -148,25 +172,85 @@
 <script lang="ts">
 import ApiService from "@/core/services/ApiService";
 import { defineComponent } from "vue";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
   name: "assign_institute",
   components: {},
   data() {
     return {
-      entity: {
-        entity_type: "",
-        role: "",
+      obj: {
+        entity_type_id: "",
+        id: "",
       },
+      entity: {
+        entity_type_id: "",
+        entity_type_role_id: "",
+        user_id: "",
+        entity_info_id: "",
+        institute_info_id: "",
+      },
+      entityId: "",
       entityRoles: [],
       entityInfos: [],
+      institutes: [],
       loading: false,
     };
   },
   async created() {
     await this.getEntityInfos();
+    this.emitter.on("assign_data", async (data) => {
+      this.entity.user_id = data.employee.user_id;
+    });
   },
   methods: {
+    async submit() {
+      this.loading = true;
+      await ApiService.post("mapping/userEntityRoleMapping", this.entity)
+        .then((response) => {
+          this.loading = false;
+          if (response.status == 200) {
+            Swal.fire({
+              text: response.data.message,
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok",
+              customClass: {
+                confirmButton: "btn btn-primary",
+              },
+            });
+          } else {
+            let err = "";
+            for (const field of Object.keys(response.data.errors)) {
+              err += response.data.errors[field][0] + "<br>";
+            }
+            Swal.fire({
+              title: "Error",
+              html: err,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Close",
+              customClass: {
+                confirmButton: "btn btn-danger",
+              },
+            });
+          }
+        })
+        .catch(({ response }) => {
+          this.loading = false;
+          Swal.fire({
+            title: "Unknown error",
+            html: response.data.error,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Close",
+            customClass: {
+              confirmButton: "btn btn-danger",
+            },
+          });
+          console.log(response);
+        });
+    },
     async getEntityInfos() {
       await ApiService.get("entity/infos")
         .then((response) => {
@@ -176,9 +260,29 @@ export default defineComponent({
           console.log(response);
         });
     },
+
+    async trainingInstitute() {
+      await ApiService.get("entity/trainingInstitutes/" + this.entityId)
+        .then((response) => {
+          this.institutes = response.data;
+          this.obj = {
+            entity_type_id: "",
+            id: "",
+          };
+          this.entity.entity_type_role_id = "";
+          this.entityRoles = [];
+        })
+        .catch(({ response }) => {
+          console.log(response);
+        });
+    },
+
     async getRoles() {
+      this.entity.entity_type_id = this.obj.entity_type_id;
+      this.entity.entity_info_id = this.entityId;
+      this.entity.institute_info_id = this.obj.id;
       await ApiService.get(
-        "entity/type_roles?entity_type=" + this.entity.entity_type
+        "entity/type_roles?entity_type=" + this.entity.entity_type_id
       )
         .then((response) => {
           this.entityRoles = response.data;

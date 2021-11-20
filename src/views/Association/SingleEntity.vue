@@ -46,13 +46,7 @@
               <!--begin::Info-->
               <div class="d-flex flex-wrap fw-bold fs-6">
                 <div
-                  class="
-                    d-flex
-                    align-items-center
-                    text-gray-400 text-hover-primary
-                    me-5
-                    mb-2
-                  "
+                  class="d-flex align-items-center text-hover-primary me-5 mb-2"
                 >
                   <span class="svg-icon svg-icon-4 me-1">
                     <inline-svg src="media/icons/duotune/general/gen018.svg" />
@@ -62,13 +56,7 @@
               </div>
               <div class="d-flex flex-wrap fw-bold fs-6">
                 <div
-                  class="
-                    d-flex
-                    align-items-center
-                    text-gray-400 text-hover-primary
-                    me-5
-                    mb-2
-                  "
+                  class="d-flex align-items-center text-hover-primary me-5 mb-2"
                 >
                   <span class="svg-icon svg-icon-4 me-1">
                     <inline-svg
@@ -79,14 +67,7 @@
                 </div>
               </div>
               <div class="d-flex flex-wrap fw-bold fs-6">
-                <div
-                  class="
-                    d-flex
-                    align-items-center
-                    text-gray-400 text-hover-primary
-                    mb-2
-                  "
-                >
+                <div class="d-flex align-items-center text-hover-primary mb-2">
                   <span class="svg-icon svg-icon-4 me-1">
                     <inline-svg
                       src="media/icons/duotune/communication/com011.svg"
@@ -96,14 +77,7 @@
                 </div>
               </div>
               <div class="d-flex flex-wrap fw-bold fs-6">
-                <div
-                  class="
-                    d-flex
-                    align-items-center
-                    text-gray-400 text-hover-primary
-                    mb-2
-                  "
-                >
+                <div class="d-flex align-items-center text-hover-primary mb-2">
                   <span class="svg-icon svg-icon-4 me-1">
                     <inline-svg
                       src="media/icons/duotune/communication/com008.svg"
@@ -113,14 +87,7 @@
                 </div>
               </div>
               <div class="d-flex flex-wrap fw-bold fs-6">
-                <div
-                  class="
-                    d-flex
-                    align-items-center
-                    text-gray-400 text-hover-primary
-                    mb-2
-                  "
-                >
+                <div class="d-flex align-items-center text-hover-primary mb-2">
                   <span class="svg-icon svg-icon-4 me-1">
                     <inline-svg
                       src="media/icons/duotune/communication/com009.svg"
@@ -277,8 +244,6 @@
             <template v-slot:cell-actions="{ row }">
               <button
                 @click="view(row.id)"
-                data-bs-toggle="modal"
-                data-bs-target="#infos_details"
                 class="
                   btn btn-icon btn-bg-light btn-active-color-primary btn-sm
                   me-1
@@ -447,7 +412,7 @@ export default defineComponent({
     view(id) {
       this.$router.push({
         name: "entityEmployeeProfiles",
-        params: { id: id },
+        params: { entity: this.entityInfoID, id: id },
       });
     },
 
